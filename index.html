@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> iClass </title>
+    <style>
+    /*Remove default page margin and sets font*/
+      body { margin: 0; font-family: 'Times New Roman', Times, serif; }
+
+      /* Navigation tabs */
+      .navbar{
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 20px; border-bottom: 1px solid #ddd; background: white;
+        position: sticky; top: 0;
+      }
+      /*iClass logo*/
+      .brand{ font-weight: 700; letter-spacing: 0.5px; } 
+      /*styles <ul> list holding links*/
+      .navlinks{ list-style: none; display: flex; gap: 18px; margin: 0; padding: 0; }
+      /*style each link*/
+      .navlink{
+        text-decoration: none; color: black; padding: 8px 6px; border-bottom: 2px solid transparent;
+      }
+      /*when mouse hover, keep black*/
+      .navlink:hover { color: black; }
+      /*for currently selected tab bold, black underline*/
+      .navlink.active { font-weight: 700; border-bottom: 2px solid black; }
+      
+      /*page switching styles*/
+      .container { padding: 20px; }
+      .page { display: none; }
+      .page.active { display: block; }
+
+      /*available room list styles*/
+      .room { font-size: 18px; margin: 6px 0; }
+      .available { color: black; }
+      .occupied { color: #999; }
+
+      /* Search controls + table */
+      .controls { margin: 12px 0 16px; }
+      /*the control bar style*/
+      .controls input{
+        padding: 10px 12px; border: 1px solid #ccc; border-radius: 10px;
+        font-size: 14px; min-width: 500px;
+      }
+
+      .table-wrap { overflow-x: auto; }
+      table { border-collapse: collapse; width: 100%; min-width: 760px; }
+      th, td { border: 1px solid #e6e6e6; padding: 10px; text-align: left; }
+      th { background: #f7f7f7; position: sticky; top: 0; }
+     /*zebra stripes every other row*/
+      tr:nth-child(even) { background: #fafafa; }
+      .small { color: #666; font-size: 12px; }
+      
+      /*makes digits for time start/end equal width*/
+      .time { font-variant-numeric: tabular-nums; }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="brand"> iClass </div>
+      <ul class="navlinks">
+        <li><a href="#" class="navlink active" data-page="availablePage">Available Now</a></li>
+        <li><a href="#" class="navlink" data-page="schedulePage">All Schedules</a></li>
+        <li><a href="#" class="navlink" data-page="aboutPage">About</a></li>
+      </ul>
+    </nav>
+
+    <main class="container">
+      <section id="availablePage" class="page active">
+        <h1> Currently Available Rooms </h1>
+        <div id="rooms"></div>
+      </section>
+
+      <section id="schedulePage" class="page">
+        <h1>All Classroom Schedules</h1>
+
+        <div class="controls">
+          <input id="searchInput" type="text" placeholder="Search room, course, or day (e.g., ENG-103, CMPE, Tue)"/>
+        </div>
+
+        <div id="scheduleTable"></div>
+      </section>
+
+      <section id="aboutPage" class="page">
+        <h1>About</h1>
+        <p>This project shows classroom availability in the Engineering Building at SJSU.</p>
+        <h2>Disclaimer</h2>
+        <p>The system holds no responsibilities for any of the consequences of the actions of the students.</p>
+      </section>
+    </main>
+
+    <script>
+      //-- Navigation bar tab switching --
+      document.querySelectorAll(".navlink").forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelectorAll(".navlink").forEach(l => l.classList.remove("active"));
+          link.classList.add("active");
+
+          document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+          document.getElementById(link.dataset.page).classList.add("active");
+        });
+      });
+
+      // Helpers used by schedule rendering
+      const weekdayMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const weekdayOrder = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
+      
+
+      function timeToMins(hhmm) {
+        const [h, m] = (hhmm || "0:00").split(":").map(Number);
+        return (Number.isFinite(h) ? h : 0) * 60 + (Number.isFinite(m) ? m : 0);
+      }
+      function padTime(t) {
+         const [h, m] = t.split(":");
+         return `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+       }
+
+      //-- Load CSV + render Available Now + All Schedules --
+      fetch('schedule.csv')
+        .then(response => response.text())
+        .then(text => {
+          const now = new Date();
+          const today = weekdayMap[now.getDay()];
+          const currentMins = now.getHours() * 60 + now.getMinutes();
+
+          const lines = text.trim().split(/\r?\n/);
+          const rows = lines.slice(1); // skip header
+
+          const busyRooms = new Set();
+          const allRooms = new Set();
+          const entries = []; // for schedule table
+
+          for (const row of rows) {
+            if (!row.trim()) continue; // skip empty rows
+
+            const [course, section, weekday, start, end, building, room] =
+              row.split(',').map(x => x.trim());
+
+            // defensive: skip incomplete rows
+            if (!building || !room) continue;
+
+            // optionally skip non-ENG if you only want engineering building:
+            // if (building !== "ENG") continue;
+
+            const roomName = `${building}-${room}`;
+            allRooms.add(roomName);
+
+            // push entry for schedule table
+            entries.push({ room: roomName, weekday, start, end, course, section });
+
+            // is it busy right now?
+            if (weekday === today) {
+              const startMins = timeToMins(start);
+              const endMins = timeToMins(end);
+              if (currentMins >= startMins && currentMins < endMins) {
+                busyRooms.add(roomName);
+              }
+            }
+          }
+
+          // Render Available Now
+          document.getElementById('rooms').innerHTML =
+            [...allRooms].sort().map(room =>
+              busyRooms.has(room)
+                ? `<div class="room occupied">${room} - Occupied</div>`
+                : `<div class="room available">${room} - Available</div>`
+            ).join('');
+
+          // Render Schedule Table with search
+          function renderScheduleTable(){
+            //get search text and lowercase it all
+            const q = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+
+            //keep only entries matching the search
+            let filtered = entries.filter(e => {
+              if (!q) return true;
+              //makes one big searchable string "haystack" and checks if it contains the query
+              const hay = `${e.room} ${e.weekday} ${e.start} ${e.end} ${e.course} ${e.section}`.toLowerCase();
+              return hay.includes(q);
+            });
+
+            //sort by room, weekday, then start time
+            filtered.sort((a, b) =>
+              a.room.localeCompare(b.room) ||
+              (weekdayOrder[a.weekday] ?? 99) - (weekdayOrder[b.weekday] ?? 99) ||
+              timeToMins(a.start) - timeToMins(b.start)
+            );
+
+            //make table rows
+            const rowsHtml = filtered.map(e => `
+              <tr>
+                <td><strong>${e.room}</strong></td>
+                <td>${e.weekday}</td>
+                <td class="time">${padTime(e.start)}</td>
+                <td class="time">${padTime(e.end)}</td>
+                <td>${e.course} <span class="small">(Sec ${e.section})</span></td>
+              </tr>
+            `).join("");
+
+            //injuects full table into the page
+            document.getElementById("scheduleTable").innerHTML = `
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Room</th>
+                      <th>Day</th>
+                      <th>Start</th>
+                      <th>End</th>
+                      <th>Course</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rowsHtml || `<tr><td colspan="5">No matches.</td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+
+          //render once initially
+          renderScheduleTable();
+          //re-render every time user types
+          document.getElementById("searchInput").addEventListener("input", renderScheduleTable);
+
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('rooms').textContent =
+            "Could not load schedule.csv. Make sure you're using Live Server and the CSV filename matches.";
+        });
+    </script>
+  </body>
+</html>
