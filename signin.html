@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iClass Sign In</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #fff7cc, #e6f2ff);
+    }
+
+    .signin-box {
+      width: 420px;
+      background-color: white;
+      border: 1px solid #d9d9d9;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo-section {
+      text-align: center;
+      padding: 30px 24px;
+      border-bottom: 1px solid #d9d9d9;
+    }
+
+    .logo-section h1 {
+      margin: 0;
+      color: #0b5dbb;
+      font-size: 34px;
+      letter-spacing: 1px;
+    }
+
+    .logo-section p {
+      margin: 8px 0 0;
+      color: #c28a1d;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .form-section {
+      padding: 35px 42px 40px;
+    }
+
+    .form-section h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 28px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #9e9e9e;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #1565d8;
+    }
+
+    .error-message {
+      color: #d93025;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .success-message {
+      color: #1e8e3e;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .signin-btn {
+      width: 100%;
+      background-color: #1565d8;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .signin-btn:hover {
+      background-color: #0f57bd;
+    }
+
+    .bottom-link {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 15px;
+      color: #555;
+    }
+
+    .bottom-link a {
+      color: #1565d8;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    .bottom-link a:hover {
+      color: #0f57bd;
+    }
+  </style>
+</head>
+<body>
+  <div class="signin-box">
+    <div class="logo-section">
+      <h1>iClass</h1>
+      <p>Engineering Building Open Classroom Search</p>
+    </div>
+
+    <div class="form-section">
+      <h2>Sign In</h2>
+
+      <form id="signinForm">
+        <div class="form-group">
+          <label for="signinEmail">Email Address</label>
+          <input
+            type="email"
+            id="signinEmail"
+            name="signinEmail"
+            placeholder="Enter your SJSU email"
+          />
+          <div id="signinEmailError" class="error-message">
+            Email must end with @sjsu.edu
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signinPassword">Password</label>
+          <input
+            type="password"
+            id="signinPassword"
+            name="signinPassword"
+            placeholder="Enter your password"
+          />
+          <div id="signinPasswordError" class="error-message">
+            Password must be longer than 6 characters
+          </div>
+        </div>
+
+        <div id="signinServerMessage" class="error-message"></div>
+        <div id="signinSuccessMessage" class="success-message"></div>
+
+        <button type="submit" class="signin-btn">Sign In</button>
+
+        <div class="bottom-link">
+          Don't have an account?
+          <a href="signup.html">Sign Up</a><br>
+          <a href="signup.html">Back to home</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const signinForm = document.getElementById("signinForm")
+    const signinEmailInput = document.getElementById("signinEmail")
+    const signinPasswordInput = document.getElementById("signinPassword")
+    const signinEmailError = document.getElementById("signinEmailError")
+    const signinPasswordError = document.getElementById("signinPasswordError")
+    const signinServerMessage = document.getElementById("signinServerMessage")
+    const signinSuccessMessage = document.getElementById("signinSuccessMessage")
+
+    function hideSigninMessages() {
+      signinServerMessage.style.display = "none"
+      signinSuccessMessage.style.display = "none"
+    }
+
+    function validateSigninEmail() {
+      const emailValue = signinEmailInput.value.trim().toLowerCase()
+
+      if (!emailValue.endsWith("@sjsu.edu")) {
+        signinEmailError.style.display = "block"
+        return false
+      }
+
+      signinEmailError.style.display = "none"
+      return true
+    }
+
+    function validateSigninPassword() {
+      const passwordValue = signinPasswordInput.value
+
+      if (passwordValue.length <= 6) {
+        signinPasswordError.style.display = "block"
+        return false
+      }
+
+      signinPasswordError.style.display = "none"
+      return true
+    }
+
+    signinEmailInput.addEventListener("input", function () {
+      validateSigninEmail()
+      hideSigninMessages()
+    })
+
+    signinPasswordInput.addEventListener("input", function () {
+      validateSigninPassword()
+      hideSigninMessages()
+    })
+
+    signinForm.addEventListener("submit", async function (event) {
+      event.preventDefault()
+      hideSigninMessages()
+
+      const isEmailValid = validateSigninEmail()
+      const isPasswordValid = validateSigninPassword()
+
+      if (!isEmailValid || !isPasswordValid) {
+        return
+      }
+
+      try {
+        const response = await fetch("/api/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: signinEmailInput.value.trim(),
+            password: signinPasswordInput.value
+          })
+        })
+
+        const result = await response.json()
+
+        if (!response.ok) {
+          if (result.field === "email") {
+            signinEmailError.textContent = result.message
+            signinEmailError.style.display = "block"
+          } else if (result.field === "password") {
+            signinPasswordError.textContent = result.message
+            signinPasswordError.style.display = "block"
+          } else {
+            signinServerMessage.textContent = result.message
+            signinServerMessage.style.display = "block"
+          }
+          return
+        }
+
+        signinSuccessMessage.textContent = result.message
+        signinSuccessMessage.style.display = "block"
+        signinForm.reset()
+      } catch (error) {
+        signinServerMessage.textContent = "Unable to connect to the server"
+        signinServerMessage.style.display = "block"
+      }
+    })
+  </script>
+</body>
+</html>
