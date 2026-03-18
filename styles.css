@@ -58,6 +58,19 @@
         position: sticky; 
         top: 0;
       }
+
+/* Logo in navbar */
+.logo-button {
+  height: 50px;        /* makes it fit nicely in the navbar */
+  width: auto;         /* keeps the logo’s original proportions */
+  margin-right: 16px;  /* space between logo and nav links */
+  cursor: pointer;
+}
+
+.logo-button:hover {
+  opacity: 0.85;        /* slight fade on hover */
+  transition: 0.2s ease-in-out;
+}
       /*iClass logo*/
       .brand{ font-weight: 700; letter-spacing: 0.5px; } 
       /*styles <ul> list holding links*/
