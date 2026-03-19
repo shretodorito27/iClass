@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iClass - Sign In Success</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #fff7cc, #e6f2ff);
+    }
+
+    .success-box {
+      width: 420px;
+      background-color: white;
+      border: 1px solid #d9d9d9;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      padding: 36px 32px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 150px;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      color: #1565d8;
+      font-size: 28px;
+    }
+
+    .gold-i {
+      color: #f4c20d;
+    }
+
+    p {
+      margin: 0 0 28px;
+      color: #555;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-width: 150px;
+      padding: 12px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .btn-reserve {
+      border: 2px solid #f4c20d;
+      color: #1565d8;
+      background-color: white;
+    }
+
+    .btn-reserve:hover {
+      background-color: #f4c20d;
+      color: black;
+    }
+
+    .btn-home {
+      border: 2px solid #1565d8;
+      color: #f4c20d;
+      background-color: white;
+    }
+
+    .btn-home:hover {
+      background-color: #1565d8;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="success-box">
+    <img src="logo.jpg" alt="iClass Logo" class="logo" />
+
+    <h1>Welcome to <span class="gold-i">i</span>Class</h1>
+
+    <p>
+      You have successfully signed in. You can now return to the home page
+      and continue exploring classroom availability in the Engineering Building.
+    </p>
+
+    <div class="btn-container">
+      <a href="#" class="btn btn-reserve">Reserve Room</a>
+      <a href="index.html" class="btn btn-home">Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>
