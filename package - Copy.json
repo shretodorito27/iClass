@@ -1,0 +1,12 @@
+{
+  "name": "iclass-project",
+  "version": "1.0.0",
+  "main": "iclass_server.js",
+  "scripts": {
+    "start": "node ./iclass_server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongodb": "^6.16.0"
+  }
+}
