@@ -12,7 +12,6 @@ const DB_NAME = "iclassDB"
 const COLLECTION_NAME = "users"
 const SALT_ROUNDS = 10
 
-
 const MAIL_USER = process.env.MAIL_USER || "your_email@gmail.com"
 const MAIL_PASS = process.env.MAIL_PASS || "your_app_password"
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`
@@ -39,7 +38,10 @@ async function connectToMongoDB() {
   usersCollection = db.collection(COLLECTION_NAME)
 
   await usersCollection.createIndex({ email: 1 }, { unique: true })
-  await usersCollection.createIndex({ verificationToken: 1 }, { unique: true, sparse: true })
+  await usersCollection.createIndex(
+    { verificationToken: 1 },
+    { unique: true, sparse: true }
+  )
 
   console.log("Connected to MongoDB")
 }
@@ -83,12 +85,16 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"))
 })
 
-app.get("/signin", (req, res) => {
-  res.sendFile(path.join(__dirname, "signin.html"))
+app.get("/signIn", (req, res) => {
+  res.sendFile(path.join(__dirname, "signIn.html"))
 })
 
-app.get("/signup", (req, res) => {
-  res.sendFile(path.join(__dirname, "signup.html"))
+app.get("/signUp", (req, res) => {
+  res.sendFile(path.join(__dirname, "signUp.html"))
+})
+
+app.get("/signInSuccess", (req, res) => {
+  res.sendFile(path.join(__dirname, "signInSuccess.html"))
 })
 
 app.get("/api/verify-email", async (req, res) => {
@@ -127,7 +133,7 @@ app.get("/api/verify-email", async (req, res) => {
     return res.send(`
       <h2>Email verified successfully</h2>
       <p>Your iClass account is now active.</p>
-      <p><a href="/signin.html">Go to Sign In</a></p>
+      <p><a href="/signIn.html">Go to Sign In</a></p>
     `)
   } catch (error) {
     console.error("Email verification error:", error)
@@ -269,7 +275,8 @@ app.post("/api/signin", async (req, res) => {
 connectToMongoDB()
   .then(() => {
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Server running on ${BASE_URL}`)
+      console.log("Server running localhost:8080/")
+      console.log(`BASE_URL for email verification: ${BASE_URL}`)
     })
   })
   .catch((error) => {
