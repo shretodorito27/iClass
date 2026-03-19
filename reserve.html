@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reserve a Room – iClass</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./reservation.css">
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!-- Logo as home button -->
+ <a href="index.html" class="navlink">
+  <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
+</a>
+        <ul class="navlinks">
+        <li><a href="index.html" class="navlink">Home</a></li>      
+        <li><a href="index.html#availablePage" class="navlink">Available Now</a></li>
+        <li><a href="index.html#schedulePage" class="navlink">All Schedules</a></li>
+        <li><a href="reserve.html" class="navlink active">Reserve</a></li>
+        <li><a href="index.html#aboutPage" class="navlink">About</a></li>
+        <li><a href="signin.html" class="navlink">Sign In</a></li>
+      </ul>
+    </nav>
+
+    <main class="container">
+
+      <section id="reservePage" class="page active">
+        <h1>Reserve a Room</h1>
+
+        <div class="reserve-layout">
+
+          <div class="reserve-left">
+            <p>Select a room and submit your reservation request.</p>
+
+            <form id="reserveForm" class="reserve-form">
+              <div class="form-row">
+                <label for="reserveName">Name</label>
+                <input id="reserveName" type="text" required />
+              </div>
+
+              <div class="form-row">
+                <label for="reserveEmail">Email</label>
+                <input id="reserveEmail" type="email" required />
+              </div>
+
+              <div class="form-row">
+                <label for="reserveRoom">Room</label>
+                <select id="reserveRoom" required>
+                  <option value="">-- Choose a room --</option>
+                  <option value="ENG-101">ENG-101</option>
+                  <option value="ENG-103">ENG-103</option>
+                  <option value="ENG-202">ENG-202</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="reserveDate">Date</label>
+                <input id="reserveDate" type="date" required />
+              </div>
+
+              <div class="form-row">
+                <label for="reserveStart">Start time</label>
+                <input id="reserveStart" type="time" required />
+              </div>
+
+              <div class="form-row">
+                <label for="reserveEnd">End time</label>
+                <input id="reserveEnd" type="time" required />
+              </div>
+
+              <button type="submit">Submit Reservation</button>
+              <p id="reserveMsg" class="msg"></p>
+            </form>
+          </div>
+
+          <div class="reserve-right">
+            <h2>Rooms</h2>
+
+            <div class="room-grid">
+              <div class="room-card">
+                <img src="./images/eng101.jpg" alt="ENG-101 classroom" class="room-img" />
+                <div class="room-body">
+                  <h3>ENG-101</h3>
+                  <p>First Floor • Capacity 30</p>
+                  <a href="reserve.html?room=ENG-101" class="reserve-btn">Reserve</a>
+                </div>
+              </div>
+
+              <div class="room-card">
+                <img src="./images/eng103.jpg" alt="ENG-103 classroom" class="room-img" />
+                <div class="room-body">
+                  <h3>ENG-103</h3>
+                  <p>Second Floor • Capacity 24</p>
+                  <a href="reserve.html?room=ENG-103" class="reserve-btn">Reserve</a>
+                </div>
+              </div>
+
+              <div class="room-card">
+                <img src="./images/eng202.jpg" alt="ENG-202 classroom" class="room-img" />
+                <div class="room-body">
+                  <h3>ENG-202</h3>
+                  <p>Third Floor • Capacity 40</p>
+                  <a href="reserve.html?room=ENG-202" class="reserve-btn">Reserve</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>
