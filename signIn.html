@@ -297,10 +297,19 @@
 
         signinSuccessMessage.textContent = result.message
         signinSuccessMessage.style.display = "block"
+
+        localStorage.setItem("isLoggedIn", "true")
+        localStorage.setItem("userEmail", signinEmailInput.value.trim().toLowerCase())
+
+        const redirectPage =
+          localStorage.getItem("redirectAfterLogin") || "./signInSuccess.html"
+
+        localStorage.removeItem("redirectAfterLogin")
+
         signinForm.reset()
 
         setTimeout(function () {
-          window.location.href = "./signInSuccess.html"
+          window.location.href = redirectPage
         }, 1000)
       } catch (error) {
         signinServerMessage.textContent = "Unable to connect to the server"
