@@ -341,6 +341,7 @@ app.post("/api/signout", (req, res) => {
     }
     res.json({ success: true, message: "Signed out successfully" })
   })
+})
 // API endpoint for reservations
 app.post("/api/reserve", requireAuth, async (req, res) => {
   try {
