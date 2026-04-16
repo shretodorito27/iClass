@@ -82,19 +82,19 @@ async function sendVerificationEmail(email, token) {
 }
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"))
+  res.sendFile(path.join(__dirname, '..', "index.html"))
 })
 
 app.get("/signIn", (req, res) => {
-  res.sendFile(path.join(__dirname, "signIn.html"))
+  res.sendFile(path.join(__dirname,'..', "signIn.html"))
 })
 
 app.get("/signUp", (req, res) => {
-  res.sendFile(path.join(__dirname, "signUp.html"))
+  res.sendFile(path.join(__dirname, '..',"signUp.html"))
 })
 
 app.get("/signInSuccess", (req, res) => {
-  res.sendFile(path.join(__dirname, "signInSuccess.html"))
+  res.sendFile(path.join(__dirname, '..', "signInSuccess.html"))
 })
 
 app.get("/api/verify-email", async (req, res) => {
