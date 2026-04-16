@@ -20,7 +20,7 @@ let usersCollection
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(__dirname))
+app.use(express.static(path.join(__dirname, '..')))
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
