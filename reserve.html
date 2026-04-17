@@ -8,27 +8,25 @@
 
   <body>
     <nav class="navbar">
-      <!-- Logo as home button -->
- <a href="index.html" class="navlink">
-  <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
-</a>
-        <ul class="navlinks">
-        <li><a href="index.html" class="navlink">Home</a></li>      
+      <a href="index.html" class="navlink">
+        <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
+      </a>
+
+      <ul class="navlinks">
+        <li><a href="index.html" class="navlink">Home</a></li>
         <li><a href="index.html#availablePage" class="navlink">Available Now</a></li>
         <li><a href="index.html#schedulePage" class="navlink">All Schedules</a></li>
         <li><a href="reserve.html" class="navlink active">Reserve</a></li>
         <li><a href="index.html#aboutPage" class="navlink">About</a></li>
-        <li><a href="signin.html" class="navlink">Sign In</a></li>
+        <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
       </ul>
     </nav>
 
     <main class="container">
-
       <section id="reservePage" class="page active">
         <h1>Reserve a Room</h1>
 
         <div class="reserve-layout">
-
           <div class="reserve-left">
             <p>Select a room and submit your reservation request.</p>
 
@@ -335,10 +333,8 @@
               </div>
             </div>
           </div>
-
         </div>
       </section>
-
     </main>
 
     <script type="module" src="./js/main.js"></script>

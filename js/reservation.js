@@ -12,10 +12,10 @@ export function setupReservations() {
     const start = document.getElementById("reserveStart").value;
     const end = document.getElementById("reserveEnd").value;
 
-    const msg = document.getElementById("reserveMsg");
+    const msg = document.getElementById("reserveMsg"); 
 
     msg.textContent = `Reservation submitted for ${room} on ${date} from ${start} to ${end}.`;
-    msg.style.color = "green";
+    msg.style.color = "green"; 
 
     form.reset();
   });
