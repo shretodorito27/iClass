@@ -55,11 +55,29 @@ function updateAuthLink() {
   }
 }
 
+function setupReserveLinks() {
+  document.querySelectorAll(".reserve-link").forEach(link => {
+    link.addEventListener("click", function (event) {
+      event.preventDefault()
+
+      const targetUrl = link.getAttribute("href") || "./reserve.html"
+
+      if (isLoggedIn()) {
+        window.location.href = targetUrl
+      } else {
+        localStorage.setItem("redirectAfterLogin", "./reserve.html")
+        window.location.href = "./signIn.html"
+      }
+    })
+  })
+}
+
 // Run only what each page needs
 if (onIndex) {
   updateAuthLink()
   setupNavTabs()
   loadAndRenderSchedule()
+  setupReserveLinks()
 }
 
 if (onReserve) {

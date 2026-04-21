@@ -295,9 +295,6 @@
           return
         }
 
-        signinSuccessMessage.textContent = result.message
-        signinSuccessMessage.style.display = "block"
-
         localStorage.setItem("isLoggedIn", "true")
         localStorage.setItem("userEmail", signinEmailInput.value.trim().toLowerCase())
 
@@ -307,10 +304,7 @@
         localStorage.removeItem("redirectAfterLogin")
 
         signinForm.reset()
-
-        setTimeout(function () {
-          window.location.href = redirectPage
-        }, 1000)
+        window.location.href = redirectPage
       } catch (error) {
         signinServerMessage.textContent = "Unable to connect to the server"
         signinServerMessage.style.display = "block"

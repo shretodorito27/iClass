@@ -7,33 +7,28 @@
   </head>
 
   <body>
-     <nav class="navbar">
-  <!-- Logo as home button -->
-  <a href="#" class="navlink" data-page="homePage">
-    <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
-  </a>
+    <nav class="navbar">
+      <a href="#" class="navlink" data-page="homePage">
+        <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
+      </a>
 
-  <ul class="navlinks">
-    <li><a href="#" class="navlink active" data-page="homePage">Home</a></li>      
-    <li><a href="#" class="navlink" data-page="availablePage">Available Now</a></li>
-    <li><a href="#" class="navlink" data-page="schedulePage">All Schedules</a></li>
-    <li><a href="reserve.html" class="navlink">Reserve</a></li>
-    <li><a href="#" class="navlink" data-page="aboutPage">About</a></li>
-     <li><a href="#" class="navlink" data-page="rulesPage">Rules</a></li>
-    
-    <!--Sign in and Sign up Page-->
-    <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
-    
-  </ul>
-</nav>
+      <ul class="navlinks">
+        <li><a href="#" class="navlink active" data-page="homePage">Home</a></li>
+        <li><a href="#" class="navlink" data-page="availablePage">Available Now</a></li>
+        <li><a href="#" class="navlink" data-page="schedulePage">All Schedules</a></li>
+        <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
+        <li><a href="#" class="navlink" data-page="aboutPage">About</a></li>
+        <li><a href="#" class="navlink" data-page="rulesPage">Rules</a></li>
+        <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
+      </ul>
+    </nav>
 
     <main class="container">
-
       <section id="homePage" class="page active">
         <h1>iClass</h1>
         <p>Find available Engineering classrooms and view schedules.</p>
         <div class="home-actions">
-          <a href="reserve.html" class="home-button">Reserve a Room</a>
+          <a href="reserve.html" class="home-button reserve-link">Reserve a Room</a>
         </div>
       </section>
 
@@ -55,12 +50,12 @@
       <section id="aboutPage" class="page">
         <h1>About</h1>
         <p>This project shows classroom availability in the Engineering Building at SJSU.</p>
-        <p>Read the rules and regulations before using the system.
+        <p>Read the rules and regulations before using the system.</p>
         <h2>Disclaimer</h2>
         <p>The system holds no responsibilities for any of the consequences of the actions of the users.</p>
       </section>
 
-      <section id="rulesPage" class = "page">
+      <section id="rulesPage" class="page">
         <h1>Rules and Regulations</h1>
         <p>1. All consequences for abuse of this system will be dealt with according to university policy.</p>
         <p>2. Users must comply with all university policies and regulations.</p>
@@ -77,7 +72,6 @@
         <h2>Disclaimer</h2>
         <p>The system holds no responsibilities for any of the consequences of the actions of the users.</p>
       </section>
-
     </main>
 
     <script type="module" src="./js/main.js"></script>

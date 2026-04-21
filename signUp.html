@@ -315,13 +315,8 @@
           return
         }
 
-        signupSuccessMessage.textContent = result.message
-        signupSuccessMessage.style.display = "block"
         signupForm.reset()
-
-        setTimeout(function () {
-          window.location.href = "signUpSuccess.html"
-        }, 1200)
+        window.location.href = "signUpSuccess.html"
       } catch (error) {
         signupServerMessage.textContent = "Unable to connect to the server"
         signupServerMessage.style.display = "block"
