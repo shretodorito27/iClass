@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - iClass</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .profile-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px 40px;
+    }
+
+    .profile-title {
+      margin-bottom: 24px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .profile-card {
+      background: white;
+      border: 1px solid #d9d9d9;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    }
+
+    .profile-card h2 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: #0b5dbb;
+    }
+
+    .profile-row {
+      margin-bottom: 16px;
+    }
+
+    .profile-row label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .profile-row input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #bdbdbd;
+      border-radius: 4px;
+    }
+
+    .profile-row p {
+      margin: 0;
+      padding: 10px 12px;
+      min-height: 22px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #f9fafb;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .profile-btn {
+      background-color: #1565d8;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .profile-btn:hover {
+      background-color: #0f57bd;
+    }
+
+    .secondary-btn {
+      background-color: #6b7280;
+    }
+
+    .secondary-btn:hover {
+      background-color: #4b5563;
+    }
+
+    .danger-btn {
+      background-color: #d93025;
+    }
+
+    .danger-btn:hover {
+      background-color: #b42318;
+    }
+
+    .status-text {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #1e8e3e;
+    }
+
+    .reservation-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+
+    .reservation-item p {
+      margin: 6px 0;
+    }
+
+    .reservation-empty {
+      color: #666;
+      margin: 0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .status-cancelled {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .status-attended {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    @media (max-width: 900px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="navlink">
+      <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
+    </a>
+
+    <ul class="navlinks">
+      <li><a href="index.html" class="navlink">Home</a></li>
+      <li><a href="index.html#availablePage" class="navlink">Available Now</a></li>
+      <li><a href="index.html#schedulePage" class="navlink">All Schedules</a></li>
+      <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
+      <li><a href="index.html#aboutPage" class="navlink">About</a></li>
+      <li><a href="myProfile.html" class="navlink active" id="profileLink" style="display: none;">My Profile</a></li>
+      <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
+    </ul>
+  </nav>
+
+  <main class="profile-container">
+    <h1 class="profile-title">My Profile</h1>
+
+    <div class="profile-grid">
+      <section class="profile-card">
+        <h2>Basic Information</h2>
+
+        <div id="profileDisplaySection">
+          <div class="profile-row">
+            <label>Name</label>
+            <p id="profileNameText">Not set</p>
+          </div>
+
+          <div class="profile-row">
+            <label>SJSU ID</label>
+            <p id="profileStudentIdText">Not set</p>
+          </div>
+
+          <div class="profile-actions">
+            <button id="editProfileBtn" class="profile-btn">Edit</button>
+          </div>
+        </div>
+
+        <div id="profileEditSection" style="display: none;">
+          <div class="profile-row">
+            <label for="profileNameInput">Name</label>
+            <input id="profileNameInput" type="text" placeholder="Enter your name" />
+          </div>
+
+          <div class="profile-row">
+            <label for="profileStudentIdInput">SJSU ID</label>
+            <input id="profileStudentIdInput" type="text" placeholder="Enter your SJSU ID" />
+          </div>
+
+          <div class="profile-actions">
+            <button id="saveProfileBtn" class="profile-btn">Save</button>
+            <button id="cancelEditBtn" class="profile-btn secondary-btn">Cancel</button>
+          </div>
+        </div>
+
+        <p id="profileSaveMessage" class="status-text"></p>
+      </section>
+
+      <section class="profile-card">
+        <h2>Current Reservation</h2>
+        <div id="currentReservationContainer"></div>
+      </section>
+    </div>
+
+    <section class="profile-card" style="margin-top: 24px;">
+      <h2>Reservation History</h2>
+      <div id="reservationHistoryContainer"></div>
+    </section>
+  </main>
+
+  <script>
+    const profileDisplaySection = document.getElementById("profileDisplaySection")
+    const profileEditSection = document.getElementById("profileEditSection")
+
+    const profileNameText = document.getElementById("profileNameText")
+    const profileStudentIdText = document.getElementById("profileStudentIdText")
+
+    const profileNameInput = document.getElementById("profileNameInput")
+    const profileStudentIdInput = document.getElementById("profileStudentIdInput")
+
+    const editProfileBtn = document.getElementById("editProfileBtn")
+    const saveProfileBtn = document.getElementById("saveProfileBtn")
+    const cancelEditBtn = document.getElementById("cancelEditBtn")
+
+    const profileSaveMessage = document.getElementById("profileSaveMessage")
+    const currentReservationContainer = document.getElementById("currentReservationContainer")
+    const reservationHistoryContainer = document.getElementById("reservationHistoryContainer")
+
+    function formatDuration(start, end) {
+      const [startHour, startMinute] = start.split(":").map(Number)
+      const [endHour, endMinute] = end.split(":").map(Number)
+
+      const startTotal = startHour * 60 + startMinute
+      const endTotal = endHour * 60 + endMinute
+      const durationMinutes = endTotal - startTotal
+
+      if (durationMinutes <= 0) {
+        return "0 mins"
+      }
+
+      const hours = Math.floor(durationMinutes / 60)
+      const minutes = durationMinutes % 60
+
+      if (hours > 0 && minutes > 0) {
+        return `${hours} hr ${minutes} min`
+      }
+
+      if (hours > 0) {
+        return `${hours} hr`
+      }
+
+      return `${minutes} min`
+    }
+
+    function getCurrentReservation() {
+      const raw = localStorage.getItem("currentReservation")
+      return raw ? JSON.parse(raw) : null
+    }
+
+    function getReservationHistory() {
+      const raw = localStorage.getItem("reservationHistory")
+      return raw ? JSON.parse(raw) : []
+    }
+
+    function saveReservationHistory(history) {
+      localStorage.setItem("reservationHistory", JSON.stringify(history))
+    }
+
+    function loadProfileInfo() {
+      const savedName = localStorage.getItem("profileName") || ""
+      const savedStudentId = localStorage.getItem("profileStudentId") || ""
+
+      profileNameText.textContent = savedName || "Not set"
+      profileStudentIdText.textContent = savedStudentId || "Not set"
+
+      profileNameInput.value = savedName
+      profileStudentIdInput.value = savedStudentId
+    }
+
+    function showEditMode() {
+      profileDisplaySection.style.display = "none"
+      profileEditSection.style.display = "block"
+      profileSaveMessage.textContent = ""
+    }
+
+    function showDisplayMode() {
+      profileDisplaySection.style.display = "block"
+      profileEditSection.style.display = "none"
+    }
+
+    function renderCurrentReservation() {
+      const reservation = getCurrentReservation()
+
+      if (!reservation) {
+        currentReservationContainer.innerHTML = `
+          <p class="reservation-empty">No current reservation.</p>
+        `
+        return
+      }
+
+      currentReservationContainer.innerHTML = `
+        <div class="reservation-item">
+          <p><strong>Room:</strong> ${reservation.room}</p>
+          <p><strong>Date:</strong> ${reservation.date}</p>
+          <p><strong>Time:</strong> ${reservation.start} - ${reservation.end}</p>
+          <p><strong>Duration:</strong> ${formatDuration(reservation.start, reservation.end)}</p>
+          <div class="profile-actions">
+            <button id="cancelReservationBtn" class="profile-btn danger-btn">Cancel Reservation</button>
+            <button id="attendedReservationBtn" class="profile-btn secondary-btn">Mark as Attended</button>
+          </div>
+        </div>
+      `
+
+      const cancelBtn = document.getElementById("cancelReservationBtn")
+      const attendedBtn = document.getElementById("attendedReservationBtn")
+
+      cancelBtn.addEventListener("click", function () {
+        const confirmed = window.confirm("Are you sure you want to cancel this reservation?")
+        if (!confirmed) {
+          return
+        }
+
+        const history = getReservationHistory()
+        history.unshift({
+          ...reservation,
+          duration: formatDuration(reservation.start, reservation.end),
+          status: "Cancelled"
+        })
+
+        saveReservationHistory(history)
+        localStorage.removeItem("currentReservation")
+        renderCurrentReservation()
+        renderReservationHistory()
+      })
+
+      attendedBtn.addEventListener("click", function () {
+        const confirmed = window.confirm("Mark this reservation as attended?")
+        if (!confirmed) {
+          return
+        }
+
+        const history = getReservationHistory()
+        history.unshift({
+          ...reservation,
+          duration: formatDuration(reservation.start, reservation.end),
+          status: "Attended"
+        })
+
+        saveReservationHistory(history)
+        localStorage.removeItem("currentReservation")
+        renderCurrentReservation()
+        renderReservationHistory()
+      })
+    }
+
+    function renderReservationHistory() {
+      const history = getReservationHistory()
+
+      if (!history.length) {
+        reservationHistoryContainer.innerHTML = `
+          <p class="reservation-empty">No reservation history yet.</p>
+        `
+        return
+      }
+
+      reservationHistoryContainer.innerHTML = history.map(item => `
+        <div class="reservation-item">
+          <p><strong>Room:</strong> ${item.room}</p>
+          <p><strong>Date:</strong> ${item.date}</p>
+          <p><strong>Time:</strong> ${item.start} - ${item.end}</p>
+          <p><strong>Duration:</strong> ${item.duration || formatDuration(item.start, item.end)}</p>
+          <p>
+            <strong>Status:</strong>
+            <span class="status-badge ${item.status === "Cancelled" ? "status-cancelled" : "status-attended"}">
+              ${item.status}
+            </span>
+          </p>
+        </div>
+      `).join("")
+    }
+
+    editProfileBtn.addEventListener("click", function () {
+      showEditMode()
+    })
+
+    cancelEditBtn.addEventListener("click", function () {
+      loadProfileInfo()
+      showDisplayMode()
+      profileSaveMessage.textContent = ""
+    })
+
+    saveProfileBtn.addEventListener("click", function () {
+      const name = profileNameInput.value.trim()
+      const studentId = profileStudentIdInput.value.trim()
+
+      localStorage.setItem("profileName", name)
+      localStorage.setItem("profileStudentId", studentId)
+
+      profileNameText.textContent = name || "Not set"
+      profileStudentIdText.textContent = studentId || "Not set"
+
+      profileSaveMessage.textContent = "Profile saved successfully."
+      showDisplayMode()
+    })
+
+    loadProfileInfo()
+    showDisplayMode()
+    renderCurrentReservation()
+    renderReservationHistory()
+  </script>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

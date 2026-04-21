@@ -106,6 +106,11 @@
         padding: 8px 6px; 
         border-bottom: 2px solid transparent;
       }
+      #profileLink {
+      display: inline-block;
+      position: relative;
+      top: -7px;
+      }
       /*when mouse hover, keep black*/
       .navlink:hover { color: black; }
       /*for currently selected tab bold, black underline*/
