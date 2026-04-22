@@ -267,18 +267,36 @@
       return `${minutes} min`
     }
 
-    function getCurrentReservation() {
-      const raw = localStorage.getItem("currentReservation")
-      return raw ? JSON.parse(raw) : null
+    async function getCurrentReservationFromServer() {
+      const email = localStorage.getItem("userEmail")
+      if (!email) {
+        return null
+      }
+
+      const response = await fetch(`/api/my-reservation?email=${encodeURIComponent(email)}`)
+      const result = await response.json()
+
+      if (!result.success) {
+        return null
+      }
+
+      return result.reservation
     }
 
-    function getReservationHistory() {
-      const raw = localStorage.getItem("reservationHistory")
-      return raw ? JSON.parse(raw) : []
-    }
+    async function getReservationHistoryFromServer() {
+      const email = localStorage.getItem("userEmail")
+      if (!email) {
+        return []
+      }
 
-    function saveReservationHistory(history) {
-      localStorage.setItem("reservationHistory", JSON.stringify(history))
+      const response = await fetch(`/api/reservation-history?email=${encodeURIComponent(email)}`)
+      const result = await response.json()
+
+      if (!result.success) {
+        return []
+      }
+
+      return result.history || []
     }
 
     function loadProfileInfo() {
@@ -303,95 +321,118 @@
       profileEditSection.style.display = "none"
     }
 
-    function renderCurrentReservation() {
-      const reservation = getCurrentReservation()
+    async function renderCurrentReservation() {
+      try {
+        const reservation = await getCurrentReservationFromServer()
 
-      if (!reservation) {
+        if (!reservation) {
+          currentReservationContainer.innerHTML = `
+            <p class="reservation-empty">No current reservation.</p>
+          `
+          return
+        }
+
         currentReservationContainer.innerHTML = `
-          <p class="reservation-empty">No current reservation.</p>
-        `
-        return
-      }
-
-      currentReservationContainer.innerHTML = `
-        <div class="reservation-item">
-          <p><strong>Room:</strong> ${reservation.room}</p>
-          <p><strong>Date:</strong> ${reservation.date}</p>
-          <p><strong>Time:</strong> ${reservation.start} - ${reservation.end}</p>
-          <p><strong>Duration:</strong> ${formatDuration(reservation.start, reservation.end)}</p>
-          <div class="profile-actions">
-            <button id="cancelReservationBtn" class="profile-btn danger-btn">Cancel Reservation</button>
-            <button id="attendedReservationBtn" class="profile-btn secondary-btn">Mark as Attended</button>
+          <div class="reservation-item">
+            <p><strong>Room:</strong> ${reservation.room}</p>
+            <p><strong>Date:</strong> ${reservation.date}</p>
+            <p><strong>Time:</strong> ${reservation.start} - ${reservation.end}</p>
+            <p><strong>Duration:</strong> ${formatDuration(reservation.start, reservation.end)}</p>
+            <div class="profile-actions">
+              <button id="cancelReservationBtn" class="profile-btn danger-btn">Cancel Reservation</button>
+              <button id="attendedReservationBtn" class="profile-btn secondary-btn">Mark as Attended</button>
+            </div>
           </div>
-        </div>
-      `
+        `
 
-      const cancelBtn = document.getElementById("cancelReservationBtn")
-      const attendedBtn = document.getElementById("attendedReservationBtn")
+        const cancelBtn = document.getElementById("cancelReservationBtn")
+        const attendedBtn = document.getElementById("attendedReservationBtn")
+        const email = localStorage.getItem("userEmail") || ""
 
-      cancelBtn.addEventListener("click", function () {
-        const confirmed = window.confirm("Are you sure you want to cancel this reservation?")
-        if (!confirmed) {
-          return
-        }
+        cancelBtn.addEventListener("click", async function () {
+          const confirmed = window.confirm("Are you sure you want to cancel this reservation?")
+          if (!confirmed) {
+            return
+          }
 
-        const history = getReservationHistory()
-        history.unshift({
-          ...reservation,
-          duration: formatDuration(reservation.start, reservation.end),
-          status: "Cancelled"
+          const response = await fetch("/api/cancel-reservation", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+          })
+
+          const result = await response.json()
+          if (!response.ok) {
+            alert(result.message)
+            return
+          }
+
+          await renderCurrentReservation()
+          await renderReservationHistory()
         })
 
-        saveReservationHistory(history)
-        localStorage.removeItem("currentReservation")
-        renderCurrentReservation()
-        renderReservationHistory()
-      })
+        attendedBtn.addEventListener("click", async function () {
+          const confirmed = window.confirm("Mark this reservation as attended?")
+          if (!confirmed) {
+            return
+          }
 
-      attendedBtn.addEventListener("click", function () {
-        const confirmed = window.confirm("Mark this reservation as attended?")
-        if (!confirmed) {
-          return
-        }
+          const response = await fetch("/api/mark-attended", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+          })
 
-        const history = getReservationHistory()
-        history.unshift({
-          ...reservation,
-          duration: formatDuration(reservation.start, reservation.end),
-          status: "Attended"
+          const result = await response.json()
+          if (!response.ok) {
+            alert(result.message)
+            return
+          }
+
+          await renderCurrentReservation()
+          await renderReservationHistory()
         })
-
-        saveReservationHistory(history)
-        localStorage.removeItem("currentReservation")
-        renderCurrentReservation()
-        renderReservationHistory()
-      })
+      } catch (error) {
+        currentReservationContainer.innerHTML = `
+          <p class="reservation-empty">Unable to load current reservation.</p>
+        `
+      }
     }
 
-    function renderReservationHistory() {
-      const history = getReservationHistory()
+    async function renderReservationHistory() {
+      try {
+        const history = await getReservationHistoryFromServer()
 
-      if (!history.length) {
+        if (!history.length) {
+          reservationHistoryContainer.innerHTML = `
+            <p class="reservation-empty">No reservation history yet.</p>
+          `
+          return
+        }
+
+        reservationHistoryContainer.innerHTML = history.map(item => `
+          <div class="reservation-item">
+            <p><strong>Room:</strong> ${item.room}</p>
+            <p><strong>Date:</strong> ${item.date}</p>
+            <p><strong>Time:</strong> ${item.start} - ${item.end}</p>
+            <p><strong>Duration:</strong> ${formatDuration(item.start, item.end)}</p>
+            <p>
+              <strong>Status:</strong>
+              <span class="status-badge ${item.status === "cancelled" ? "status-cancelled" : "status-attended"}">
+                ${item.status === "cancelled" ? "Cancelled" : "Attended"}
+              </span>
+            </p>
+          </div>
+        `).join("")
+      } catch (error) {
         reservationHistoryContainer.innerHTML = `
-          <p class="reservation-empty">No reservation history yet.</p>
+          <p class="reservation-empty">Unable to load reservation history.</p>
         `
-        return
       }
-
-      reservationHistoryContainer.innerHTML = history.map(item => `
-        <div class="reservation-item">
-          <p><strong>Room:</strong> ${item.room}</p>
-          <p><strong>Date:</strong> ${item.date}</p>
-          <p><strong>Time:</strong> ${item.start} - ${item.end}</p>
-          <p><strong>Duration:</strong> ${item.duration || formatDuration(item.start, item.end)}</p>
-          <p>
-            <strong>Status:</strong>
-            <span class="status-badge ${item.status === "Cancelled" ? "status-cancelled" : "status-attended"}">
-              ${item.status}
-            </span>
-          </p>
-        </div>
-      `).join("")
     }
 
     editProfileBtn.addEventListener("click", function () {
