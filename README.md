@@ -1,5 +1,5 @@
 <h1>
-  <img src="./images/iClasslogo.jpg" width="35" style="vertical-align: middle;">
+  <img src="./images/iClasslogo.jpg" width="50" style="vertical-align: middle;">
   iClass
 </h1>
 
@@ -136,13 +136,13 @@ $env:BASE_URL="http://localhost:8080"
 If you are testing email confirmation from outside your local machine using Cloudflare Tunnel, replace **BASE_URL** with your public tunnel URL.
 
 ### Step 1:
-<img src="./images/EnvironmentStep1.png" width="700">
+<img src="./images/EnvironmentStep1.jpg" width="700">
 
 ### Step 2:
-<img src="./images/EnvironmentStep2.png" width="700">
+<img src="./images/EnvironmentStep2.jpg" width="700">
 
 ### Step 3:
-<img src="./images/EnvironmentStep3.png" width="700">
+<img src="./images/EnvironmentStep3.jpg" width="700">
 
 
 ---
@@ -159,7 +159,7 @@ node .\\js\\iclass_server.js
 Open the project in a browser at http://localhost:8080.
 
 ### The commands to show information in Mongo database:
-<img src="./images/MongoDBpart1.png" width="700">
+<img src="./images/MongoDBpart1.jpg" width="700">
 <img src="./images/MongoDBpart2.jpg" width="700">
 
 ---
