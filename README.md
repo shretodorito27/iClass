@@ -120,8 +120,11 @@ db.reservations.find()
 ---
 
 ## ✉️ Email Setup (Nodemailer)
+
 This project uses Nodemailer with Gmail. You need your Gmail address and a Gmail App Password, not your normal Gmail password.
+
 ---
+
 ## ⚙️ Environment Variables
 Before running the server, set the following variables in PowerShell:
 
@@ -130,7 +133,7 @@ $env:MAIL_USER="your_email@gmail.com"
 $env:MAIL_PASS="your_app_password"
 $env:BASE_URL="http://localhost:8080"
 ```
-If you are testing email confirmation from outside your local machine using Cloudflare Tunnel, replace BASE_URL with your public tunnel URL.
+If you are testing email confirmation from outside your local machine using Cloudflare Tunnel, replace **BASE_URL** with your public tunnel URL.
 
 ### Step 1:
 <img src="./images/EnvironmentStep1.png" width="700">
@@ -145,13 +148,17 @@ If you are testing email confirmation from outside your local machine using Clou
 ---
 
 ## ▶️ How to Run the Project
-Step 1: Start MongoDB and make sure it is running locally.
-Step 2: Start the server from the project folder:
+### Step 1:
+Start MongoDB and make sure it is running locally.
+### Step 2:
+Start the server from the project folder:
 ```bash
 node .\\js\\iclass_server.js
 ```
-Step 3: Open the project in a browser at http://localhost:8080.
-The commands to show information in Mongo database:
+### Step 3:
+Open the project in a browser at http://localhost:8080.
+
+### The commands to show information in Mongo database:
 <img src="./images/MongoDBpart1.png" width="700">
 <img src="./images/MongoDBpart2.jpg" width="700">
 
