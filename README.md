@@ -2,6 +2,7 @@
   <img src="./images/iClasslogo.jpg" width="35" style="vertical-align: middle;">
   iClass
 </h1>
+
 ## 📌 Overview
 
 **iClass** is a web-based classroom search and reservation system for the Engineering Building at San José State University. It allows users to view classroom availability, browse schedules, create accounts, and reserve rooms.
@@ -62,10 +63,10 @@ iClass/
 │-- myProfile.html
 │-- signIn.html
 │-- signUp.html
-|-- signInSuccess.html
-|-- signUpSuccess.html
+│-- signInSuccess.html
+│-- signUpSuccess.html
 │-- styles.css
-|-- reservation.css
+│-- reservation.css
 │-- package.json
 `-- README.md
 ```
@@ -94,7 +95,9 @@ git clone https://github.com/shretodorito27/iClass.git
 - MongoDB Community Server  
 - MongoDB Shell (mongosh) or Compass  
 - Gmail account with App Password  
+
 ---
+
 ## 📦 How to Install Dependencies
 Open a terminal in the project root folder and run:
 ```bash
@@ -119,7 +122,7 @@ db.reservations.find()
 ## ✉️ Email Setup (Nodemailer)
 This project uses Nodemailer with Gmail. You need your Gmail address and a Gmail App Password, not your normal Gmail password.
 ---
-## Environment Variables
+## ⚙️ Environment Variables
 Before running the server, set the following variables in PowerShell:
 
 ```powershell
@@ -128,9 +131,17 @@ $env:MAIL_PASS="your_app_password"
 $env:BASE_URL="http://localhost:8080"
 ```
 If you are testing email confirmation from outside your local machine using Cloudflare Tunnel, replace BASE_URL with your public tunnel URL.
-Step 1:
-Step 2:
-Step 3:
+
+### Step 1:
+<img src="./images/EnvironmentStep1.png" width="700">
+
+### Step 2:
+<img src="./images/EnvironmentStep2.png" width="700">
+
+### Step 3:
+<img src="./images/EnvironmentStep3.png" width="700">
+
+
 ---
 
 ## ▶️ How to Run the Project
@@ -141,7 +152,8 @@ node .\\js\\iclass_server.js
 ```
 Step 3: Open the project in a browser at http://localhost:8080.
 The commands to show information in Mongo database:
-
+<img src="./images/MongoDBpart1.png" width="700">
+<img src="./images/MongoDBpart2.jpg" width="700">
 
 ---
 
