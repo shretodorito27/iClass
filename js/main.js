@@ -1,6 +1,7 @@
 import { setupNavTabs } from "./nav.js"
 import { loadAndRenderSchedule } from "./schedule.js"
 import { setupReservations } from "./reservation.js"
+import { setupComplaints } from "./complaints.js"
 
 // Detect which page we are on
 const onIndex =
@@ -86,6 +87,7 @@ if (onIndex) {
   setupNavTabs()
   loadAndRenderSchedule()
   setupReserveLinks()
+  setupComplaints()
 }
 
 if (onReserve) {

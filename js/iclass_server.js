@@ -11,14 +11,17 @@ const MONGO_URL = "mongodb://127.0.0.1:27017"
 const DB_NAME = "iclassDB"
 const USERS_COLLECTION_NAME = "users"
 const RESERVATIONS_COLLECTION_NAME = "reservations"
+const COMPLAINTS_COLLECTION_NAME = "complaints"
 const SALT_ROUNDS = 10
 
 const MAIL_USER = process.env.MAIL_USER || "your_email@gmail.com"
 const MAIL_PASS = process.env.MAIL_PASS || "your_app_password"
+const COMPLAINTS_EMAIL = process.env.COMPLAINTS_EMAIL || "your_email@gmail.com"
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`
 
 let usersCollection
 let reservationsCollection
+let complaintsCollection
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -39,6 +42,7 @@ async function connectToMongoDB() {
   const db = client.db(DB_NAME)
   usersCollection = db.collection(USERS_COLLECTION_NAME)
   reservationsCollection = db.collection(RESERVATIONS_COLLECTION_NAME)
+  complaintsCollection = db.collection(COMPLAINTS_COLLECTION_NAME)
 
   await usersCollection.createIndex({ email: 1 }, { unique: true })
   await usersCollection.createIndex(
@@ -137,6 +141,36 @@ async function sendReservationConfirmationEmail(email, token) {
       </p>
       <p>If you did not make this request, you can ignore this email.</p>
       <p>${confirmLink}</p>
+    `
+  }
+
+  await transporter.sendMail(mailOptions)
+}
+
+async function sendComplaintEmail(complaint) {
+  const categoryLabel = {
+    "room-condition": "Room Condition",
+    "equipment": "Equipment Issue",
+    "schedule-error": "Schedule Error",
+    "system-issue": "System Technical Issue",
+    "other": "Other"
+  }[complaint.category] || complaint.category
+
+  const mailOptions = {
+    from: `iClass <${MAIL_USER}>`,
+    to: COMPLAINTS_EMAIL,
+    subject: `New Complaint: ${categoryLabel}`,
+    html: `
+      <h2>New Complaint Submitted</h2>
+      <p><strong>Submitted by:</strong> ${complaint.name}</p>
+      <p><strong>Email:</strong> ${complaint.email}</p>
+      <p><strong>Category:</strong> ${categoryLabel}</p>
+      ${complaint.room ? `<p><strong>Room:</strong> ${complaint.room}</p>` : ""}
+      ${complaint.date ? `<p><strong>Date of Incident:</strong> ${complaint.date}</p>` : ""}
+      <p><strong>Message:</strong></p>
+      <p>${complaint.message.replace(/\n/g, "<br>")}</p>
+      <hr />
+      <p><small>This complaint was submitted through the iClass system.</small></p>
     `
   }
 
@@ -660,6 +694,48 @@ app.post("/api/mark-attended", async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while updating the reservation."
+    })
+  }
+})
+
+app.post("/api/complaints", async (req, res) => {
+  try {
+    const name = (req.body.name || "").trim()
+    const email = (req.body.email || "").trim().toLowerCase()
+    const category = (req.body.category || "").trim()
+    const room = (req.body.room || "").trim()
+    const date = (req.body.date || "").trim()
+    const message = (req.body.message || "").trim()
+
+    if (!name || !email || !category || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill in all required fields."
+      })
+    }
+
+    const complaint = {
+      name,
+      email,
+      category,
+      room: room || null,
+      date: date || null,
+      message,
+      createdAt: new Date()
+    }
+
+    await complaintsCollection.insertOne(complaint)
+    await sendComplaintEmail(complaint)
+
+    return res.json({
+      success: true,
+      message: "Complaint submitted successfully. Thank you for your feedback."
+    })
+  } catch (error) {
+    console.error("Complaint submission error:", error)
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while submitting your complaint."
     })
   }
 })

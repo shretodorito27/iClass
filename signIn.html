@@ -220,6 +220,21 @@
       signinSuccessMessage.style.display = "none"
     }
 
+    function showServerNotice(message) {
+      signinServerMessage.textContent = message
+      signinServerMessage.style.display = "block"
+    }
+
+    if (window.location.protocol === "file:") {
+      showServerNotice(
+        "Please open this page through the server at http://localhost:8080/signIn, not directly from the file system."
+      )
+      const submitButton = signinForm.querySelector("button[type='submit']")
+      if (submitButton) {
+        submitButton.disabled = true
+      }
+    }
+
     function validateSigninEmail() {
       const emailValue = signinEmailInput.value.trim().toLowerCase()
 

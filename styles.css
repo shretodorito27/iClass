@@ -198,3 +198,82 @@
         color: white;
         cursor: pointer;
       }
+
+      /* Complaints form styles */
+      .complaints-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      .complaint-form {
+        margin-top: 20px;
+      }
+
+      .complaint-form .form-group {
+        margin-bottom: 16px;
+      }
+
+      .complaint-form label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .complaint-form input[type="text"],
+      .complaint-form input[type="email"],
+      .complaint-form input[type="date"],
+      .complaint-form select,
+      .complaint-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      .complaint-form textarea {
+        font-family: Arial, sans-serif;
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .complaint-form input[type="text"]:focus,
+      .complaint-form input[type="email"]:focus,
+      .complaint-form input[type="date"]:focus,
+      .complaint-form select:focus,
+      .complaint-form textarea:focus {
+        outline: none;
+        border-color: var(--sjsu-blue);
+        box-shadow: 0 0 4px rgba(0, 85, 162, 0.2);
+      }
+
+      .complaint-form button[type="submit"] {
+        background: var(--sjsu-blue);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      .complaint-form button[type="submit"]:hover {
+        background: #003f7a;
+      }
+
+      .complaint-form .msg {
+        margin-top: 12px;
+        font-weight: 600;
+        text-align: center;
+      }
+

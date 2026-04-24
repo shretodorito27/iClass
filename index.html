@@ -19,6 +19,7 @@
         <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
         <li><a href="#" class="navlink" data-page="aboutPage">About</a></li>
         <li><a href="#" class="navlink" data-page="rulesPage">Rules</a></li>
+        <li><a href="#" class="navlink" data-page="complaintsPage">Complaints</a></li>
         <li><a href="myProfile.html" class="navlink" id="profileLink" style="display: none;">My Profile</a></li>
         <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
       </ul>
@@ -72,6 +73,55 @@
         <p>12. Leave the rooms in clean and tidy condition after use.</p>
         <h2>Disclaimer</h2>
         <p>The system holds no responsibilities for any of the consequences of the actions of the users.</p>
+      </section>
+
+      <section id="complaintsPage" class="page">
+        <h1>Submit a Complaint</h1>
+        <div class="complaints-container">
+          <p>If you have experienced an issue or have a complaint about the iClass system or a classroom, please submit it below. Your feedback is important and helps us improve the system.</p>
+          
+          <form id="complaintForm" class="complaint-form">
+            <div class="form-group">
+              <label for="complaintName">Your Name:</label>
+              <input type="text" id="complaintName" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="complaintEmail">Email Address:</label>
+              <input type="email" id="complaintEmail" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="complaintCategory">Category:</label>
+              <select id="complaintCategory" name="category" required>
+                <option value="">-- Select a category --</option>
+                <option value="room-condition">Room Condition</option>
+                <option value="equipment">Equipment Issue</option>
+                <option value="schedule-error">Schedule Error</option>
+                <option value="system-issue">System Technical Issue</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="complaintRoom">Room (Optional):</label>
+              <input type="text" id="complaintRoom" name="room" placeholder="e.g., ENG-103" />
+            </div>
+
+            <div class="form-group">
+              <label for="complaintDate">Date of Incident (Optional):</label>
+              <input type="date" id="complaintDate" name="date" />
+            </div>
+
+            <div class="form-group">
+              <label for="complaintMessage">Complaint Details:</label>
+              <textarea id="complaintMessage" name="message" rows="6" placeholder="Please describe your complaint in detail..." required></textarea>
+            </div>
+
+            <button type="submit">Submit Complaint</button>
+            <p id="complaintMsg" class="msg"></p>
+          </form>
+        </div>
       </section>
     </main>
 
