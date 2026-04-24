@@ -11,23 +11,10 @@
       margin: 0;
       font-family: Arial, sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #fff7cc, #e6f2ff);
-    }
-
-    .navbar {
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-    }
-
-    .container {
-      min-height: calc(100vh - 100px);
-      padding-top: 130px;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: linear-gradient(135deg, #fff7cc, #e6f2ff);
     }
 
     .signin-box {
@@ -36,7 +23,6 @@
       border: 1px solid #d9d9d9;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      margin-bottom: 40px;
     }
 
     .logo {
@@ -99,8 +85,7 @@
       outline: none;
     }
 
-    input[type="email"]:focus,
-    input[type="password"]:focus {
+    input:focus {
       border-color: #1565d8;
     }
 
@@ -147,10 +132,6 @@
       font-weight: 500;
     }
 
-    .bottom-link a:hover {
-      color: #0f57bd;
-    }
-
     .home-link {
       text-align: center;
       margin-top: 12px;
@@ -161,210 +142,53 @@
       color: #6b7280;
       text-decoration: underline;
     }
-
-    .home-link a:hover {
-      color: #374151;
-    }
   </style>
 </head>
 
 <body>
-  <nav class="navbar">
-    <a href="index.html" class="navlink">
-      <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
-    </a>
 
-    <ul class="navlinks">
-      <li><a href="index.html" class="navlink">Home</a></li>
-      <li><a href="index.html#availablePage" class="navlink">Available Now</a></li>
-      <li><a href="index.html#schedulePage" class="navlink">All Schedules</a></li>
-      <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
-      <li><a href="index.html#aboutPage" class="navlink">About</a></li>
-      <li><a href="index.html#rulesPage" class="navlink">Rules</a></li>
-      <li><a href="index.html#complaintsPage" class="navlink">Complaints</a></li>
-      <li><a href="myProfile.html" class="navlink" id="profileLink" style="display: none;">My Profile</a></li>
-      <li><a href="signIn.html" class="navlink active" id="authLink">Sign In</a></li>
-    </ul>
-  </nav>
-
-  <main class="container">
-    <div class="signin-box">
-      <div class="logo-section">
-        <img src="images/iClasslogo.jpg" alt="iClass Logo" class="logo" />
-        <h1>iClass</h1>
-        <p>Engineering Building Open Classroom Search</p>
-      </div>
-
-      <div class="form-section">
-        <h2>Sign In</h2>
-
-        <form id="signinForm">
-          <div class="form-group">
-            <label for="signinEmail">Email Address</label>
-            <input
-              type="email"
-              id="signinEmail"
-              name="signinEmail"
-              placeholder="Enter your SJSU email"
-            />
-            <div id="signinEmailError" class="error-message">
-              Email must end with @sjsu.edu
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="signinPassword">Password</label>
-            <input
-              type="password"
-              id="signinPassword"
-              name="signinPassword"
-              placeholder="Enter your password"
-            />
-            <div id="signinPasswordError" class="error-message">
-              Password must be longer than 6 characters
-            </div>
-          </div>
-
-          <div id="signinServerMessage" class="error-message"></div>
-          <div id="signinSuccessMessage" class="success-message"></div>
-
-          <button type="submit" class="signin-btn">Sign In</button>
-
-          <div class="bottom-link">
-            Don't have an account?
-            <a href="signUp.html">Sign Up</a>
-          </div>
-
-          <div class="home-link">
-            <a href="index.html">Back to home</a>
-          </div>
-        </form>
-      </div>
+  <div class="signin-box">
+    <div class="logo-section">
+      <img src="images/iClasslogo.jpg" alt="iClass Logo" class="logo" />
+      <h1>iClass</h1>
+      <p>Engineering Building Open Classroom Search</p>
     </div>
-  </main>
 
-  <script>
-    const signinForm = document.getElementById("signinForm")
-    const signinEmailInput = document.getElementById("signinEmail")
-    const signinPasswordInput = document.getElementById("signinPassword")
-    const signinEmailError = document.getElementById("signinEmailError")
-    const signinPasswordError = document.getElementById("signinPasswordError")
-    const signinServerMessage = document.getElementById("signinServerMessage")
-    const signinSuccessMessage = document.getElementById("signinSuccessMessage")
+    <div class="form-section">
+      <h2>Sign In</h2>
 
-    function hideSigninMessages() {
-      signinServerMessage.style.display = "none"
-      signinSuccessMessage.style.display = "none"
-    }
+      <form id="signinForm">
+        <div class="form-group">
+          <label for="signinEmail">Email Address</label>
+          <input type="email" id="signinEmail" placeholder="Enter your SJSU email" />
+          <div id="signinEmailError" class="error-message">
+            Email must end with @sjsu.edu
+          </div>
+        </div>
 
-    function showServerNotice(message) {
-      signinServerMessage.textContent = message
-      signinServerMessage.style.display = "block"
-    }
+        <div class="form-group">
+          <label for="signinPassword">Password</label>
+          <input type="password" id="signinPassword" placeholder="Enter your password" />
+          <div id="signinPasswordError" class="error-message">
+            Password must be longer than 6 characters
+          </div>
+        </div>
 
-    if (window.location.protocol === "file:") {
-      showServerNotice(
-        "Please open this page through the server at http://localhost:8080/signIn, not directly from the file system."
-      )
+        <div id="signinServerMessage" class="error-message"></div>
 
-      const submitButton = signinForm.querySelector("button[type='submit']")
+        <button type="submit" class="signin-btn">Sign In</button>
 
-      if (submitButton) {
-        submitButton.disabled = true
-      }
-    }
+        <div class="bottom-link">
+          Don't have an account?
+          <a href="signUp.html">Sign Up</a>
+        </div>
 
-    function validateSigninEmail() {
-      const emailValue = signinEmailInput.value.trim().toLowerCase()
+        <div class="home-link">
+          <a href="index.html">Back to home</a>
+        </div>
+      </form>
+    </div>
+  </div>
 
-      if (!emailValue.endsWith("@sjsu.edu")) {
-        signinEmailError.textContent = "Email must end with @sjsu.edu"
-        signinEmailError.style.display = "block"
-        return false
-      }
-
-      signinEmailError.style.display = "none"
-      return true
-    }
-
-    function validateSigninPassword() {
-      const passwordValue = signinPasswordInput.value
-
-      if (passwordValue.length <= 6) {
-        signinPasswordError.textContent = "Password must be longer than 6 characters"
-        signinPasswordError.style.display = "block"
-        return false
-      }
-
-      signinPasswordError.style.display = "none"
-      return true
-    }
-
-    signinEmailInput.addEventListener("input", function () {
-      validateSigninEmail()
-      hideSigninMessages()
-    })
-
-    signinPasswordInput.addEventListener("input", function () {
-      validateSigninPassword()
-      hideSigninMessages()
-    })
-
-    signinForm.addEventListener("submit", async function (event) {
-      event.preventDefault()
-      hideSigninMessages()
-
-      const isEmailValid = validateSigninEmail()
-      const isPasswordValid = validateSigninPassword()
-
-      if (!isEmailValid || !isPasswordValid) {
-        return
-      }
-
-      try {
-        const response = await fetch("/api/signin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email: signinEmailInput.value.trim(),
-            password: signinPasswordInput.value
-          })
-        })
-
-        const result = await response.json()
-
-        if (!response.ok) {
-          if (result.field === "email") {
-            signinEmailError.textContent = result.message
-            signinEmailError.style.display = "block"
-          } else if (result.field === "password") {
-            signinPasswordError.textContent = result.message
-            signinPasswordError.style.display = "block"
-          } else {
-            signinServerMessage.textContent = result.message
-            signinServerMessage.style.display = "block"
-          }
-
-          return
-        }
-
-        localStorage.setItem("isLoggedIn", "true")
-        localStorage.setItem("userEmail", signinEmailInput.value.trim().toLowerCase())
-
-        const redirectPage =
-          localStorage.getItem("redirectAfterLogin") || "./signInSuccess.html"
-
-        localStorage.removeItem("redirectAfterLogin")
-
-        signinForm.reset()
-        window.location.href = redirectPage
-      } catch (error) {
-        signinServerMessage.textContent = "Unable to connect to the server"
-        signinServerMessage.style.display = "block"
-      }
-    })
-  </script>
 </body>
 </html>
