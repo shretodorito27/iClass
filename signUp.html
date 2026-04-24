@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>iClass Sign Up</title>
   <link rel="stylesheet" href="./styles.css">
+
   <style>
     body {
       margin: 0;
@@ -26,7 +27,6 @@
 
     .logo {
       width: 150px;
-      max-width: 100%;
       margin-bottom: 20px;
     }
 
@@ -40,14 +40,12 @@
       margin: 0;
       color: #0b5dbb;
       font-size: 34px;
-      letter-spacing: 1px;
     }
 
     .logo-section p {
       margin: 8px 0 0;
       color: #c28a1d;
       font-size: 15px;
-      line-height: 1.4;
     }
 
     .form-section {
@@ -56,7 +54,6 @@
 
     .form-section h2 {
       text-align: center;
-      margin-top: 0;
       margin-bottom: 28px;
       font-size: 18px;
       color: #444;
@@ -70,22 +67,17 @@
       display: block;
       font-weight: bold;
       margin-bottom: 8px;
-      color: #222;
     }
 
-    input[type="email"],
-    input[type="password"] {
+    input {
       width: 100%;
-      box-sizing: border-box;
       padding: 12px;
       font-size: 16px;
       border: 1px solid #9e9e9e;
       border-radius: 2px;
-      outline: none;
     }
 
-    input[type="email"]:focus,
-    input[type="password"]:focus {
+    input:focus {
       border-color: #1565d8;
     }
 
@@ -94,14 +86,6 @@
       font-size: 14px;
       margin-top: 8px;
       display: none;
-    }
-
-    .success-message {
-      color: #1e8e3e;
-      font-size: 14px;
-      margin-top: 8px;
-      display: none;
-      line-height: 1.5;
     }
 
     .signup-btn {
@@ -113,7 +97,6 @@
       font-size: 16px;
       border-radius: 3px;
       cursor: pointer;
-      margin-top: 10px;
     }
 
     .signup-btn:hover {
@@ -124,42 +107,20 @@
       text-align: center;
       margin-top: 18px;
       font-size: 15px;
-      color: #555;
     }
 
     .bottom-link a {
       color: #1565d8;
       text-decoration: underline;
-      font-weight: 500;
-    }
-
-    .bottom-link a:hover {
-      color: #0f57bd;
     }
   </style>
 </head>
-<body>
-  <nav class="navbar">
-    <a href="index.html" class="navlink">
-      <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
-    </a>
 
-    <ul class="navlinks">
-      <li><a href="index.html" class="navlink">Home</a></li>
-      <li><a href="index.html#availablePage" class="navlink">Available Now</a></li>
-      <li><a href="index.html#schedulePage" class="navlink">All Schedules</a></li>
-      <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
-      <li><a href="index.html#aboutPage" class="navlink">About</a></li>
-      <li><a href="index.html#rulesPage" class="navlink">Rules</a></li>
-      <li><a href="index.html#complaintsPage" class="navlink">Complaints</a></li>
-      <li><a href="myProfile.html" class="navlink" id="profileLink" style="display: none;">My Profile</a></li>
-      <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
-    </ul>
-  </nav>
+<body>
 
   <div class="signup-box">
     <div class="logo-section">
-      <img src="images/iClasslogo.jpg" alt="iClass Logo" class="logo" />
+      <img src="images/iClasslogo.jpg" class="logo" />
       <h1>iClass</h1>
       <p>Engineering Building Open Classroom Search</p>
     </div>
@@ -169,146 +130,48 @@
 
       <form id="signupForm">
         <div class="form-group">
-          <label for="email">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your SJSU email"
-          />
-          <div id="emailError" class="error-message">
-            Email must end with @sjsu.edu
-          </div>
+          <label>Email</label>
+          <input id="email" type="email" placeholder="Enter your SJSU email" />
+          <div id="emailError" class="error-message"></div>
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-          />
-          <div id="passwordError" class="error-message">
-            Password must be longer than 6 characters
-          </div>
+          <label>Password</label>
+          <input id="password" type="password" />
+          <div id="passwordError" class="error-message"></div>
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            placeholder="Re-enter your password"
-          />
-          <div id="confirmPasswordError" class="error-message">
-            The two passwords do not match
-          </div>
+          <label>Confirm Password</label>
+          <input id="confirmPassword" type="password" />
+          <div id="confirmPasswordError" class="error-message"></div>
         </div>
 
         <div id="signupServerMessage" class="error-message"></div>
-        <div id="signupSuccessMessage" class="success-message"></div>
 
-        <button type="submit" class="signup-btn">Sign Up</button>
+        <button class="signup-btn" type="submit">Sign Up</button>
 
         <div class="bottom-link">
-          Already have an account?
-          <a href="signIn.html">Sign In</a><br>
+          <a href="signIn.html">Already have an account? Sign In</a><br>
           <a href="index.html">Back to home</a>
         </div>
       </form>
     </div>
   </div>
-</main>
 
   <script>
     const signupForm = document.getElementById("signupForm")
     const emailInput = document.getElementById("email")
     const passwordInput = document.getElementById("password")
     const confirmPasswordInput = document.getElementById("confirmPassword")
-    const emailError = document.getElementById("emailError")
-    const passwordError = document.getElementById("passwordError")
-    const confirmPasswordError = document.getElementById("confirmPasswordError")
-    const signupServerMessage = document.getElementById("signupServerMessage")
-    const signupSuccessMessage = document.getElementById("signupSuccessMessage")
 
-    function hideSignupMessages() {
-      signupServerMessage.style.display = "none"
-      signupSuccessMessage.style.display = "none"
-    }
-
-    function validateEmail() {
-      const emailValue = emailInput.value.trim().toLowerCase()
-
-      if (!emailValue.endsWith("@sjsu.edu")) {
-        emailError.textContent = "Email must end with @sjsu.edu"
-        emailError.style.display = "block"
-        return false
-      }
-
-      emailError.style.display = "none"
-      return true
-    }
-
-    function validatePassword() {
-      const passwordValue = passwordInput.value
-
-      if (passwordValue.length <= 6) {
-        passwordError.textContent = "Password must be longer than 6 characters"
-        passwordError.style.display = "block"
-        return false
-      }
-
-      passwordError.style.display = "none"
-      return true
-    }
-
-    function validateConfirmPassword() {
-      if (confirmPasswordInput.value !== passwordInput.value) {
-        confirmPasswordError.textContent = "The two passwords do not match"
-        confirmPasswordError.style.display = "block"
-        return false
-      }
-
-      confirmPasswordError.style.display = "none"
-      return true
-    }
-
-    emailInput.addEventListener("input", function () {
-      validateEmail()
-      hideSignupMessages()
-    })
-
-    passwordInput.addEventListener("input", function () {
-      validatePassword()
-      validateConfirmPassword()
-      hideSignupMessages()
-    })
-
-    confirmPasswordInput.addEventListener("input", function () {
-      validateConfirmPassword()
-      hideSignupMessages()
-    })
-
-    signupForm.addEventListener("submit", async function (event) {
-      event.preventDefault()
-      hideSignupMessages()
-
-      const isEmailValid = validateEmail()
-      const isPasswordValid = validatePassword()
-      const isConfirmPasswordValid = validateConfirmPassword()
-
-      if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
-        return
-      }
+    signupForm.addEventListener("submit", async function (e) {
+      e.preventDefault()
 
       try {
         const response = await fetch("/api/signup", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: emailInput.value.trim(),
             password: passwordInput.value,
@@ -316,32 +179,17 @@
           })
         })
 
-        const result = await response.json()
-
         if (!response.ok) {
-          if (result.field === "email") {
-            emailError.textContent = result.message
-            emailError.style.display = "block"
-          } else if (result.field === "password") {
-            passwordError.textContent = result.message
-            passwordError.style.display = "block"
-          } else if (result.field === "confirmPassword") {
-            confirmPasswordError.textContent = result.message
-            confirmPasswordError.style.display = "block"
-          } else {
-            signupServerMessage.textContent = result.message
-            signupServerMessage.style.display = "block"
-          }
+          document.getElementById("signupServerMessage").textContent = "Sign up failed"
           return
         }
 
-        signupForm.reset()
         window.location.href = "signUpSuccess.html"
-      } catch (error) {
-        signupServerMessage.textContent = "Unable to connect to the server"
-        signupServerMessage.style.display = "block"
+      } catch {
+        document.getElementById("signupServerMessage").textContent = "Server error"
       }
     })
   </script>
+
 </body>
 </html>
