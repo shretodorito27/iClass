@@ -5,15 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>iClass Sign In</title>
   <link rel="stylesheet" href="./styles.css">
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       min-height: 100vh;
+      background: linear-gradient(135deg, #fff7cc, #e6f2ff);
+    }
+
+    .navbar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .container {
+      min-height: calc(100vh - 100px);
+      padding-top: 130px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #fff7cc, #e6f2ff);
     }
 
     .signin-box {
@@ -22,6 +36,7 @@
       border: 1px solid #d9d9d9;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      margin-bottom: 40px;
     }
 
     .logo {
@@ -152,6 +167,7 @@
     }
   </style>
 </head>
+
 <body>
   <nav class="navbar">
     <a href="index.html" class="navlink">
@@ -173,59 +189,59 @@
 
   <main class="container">
     <div class="signin-box">
-    <div class="logo-section">
-      <img src="images/iClasslogo.jpg" alt="iClass Logo" class="logo" />
-      <h1>iClass</h1>
-      <p>Engineering Building Open Classroom Search</p>
-    </div>
+      <div class="logo-section">
+        <img src="images/iClasslogo.jpg" alt="iClass Logo" class="logo" />
+        <h1>iClass</h1>
+        <p>Engineering Building Open Classroom Search</p>
+      </div>
 
-    <div class="form-section">
-      <h2>Sign In</h2>
+      <div class="form-section">
+        <h2>Sign In</h2>
 
-      <form id="signinForm">
-        <div class="form-group">
-          <label for="signinEmail">Email Address</label>
-          <input
-            type="email"
-            id="signinEmail"
-            name="signinEmail"
-            placeholder="Enter your SJSU email"
-          />
-          <div id="signinEmailError" class="error-message">
-            Email must end with @sjsu.edu
+        <form id="signinForm">
+          <div class="form-group">
+            <label for="signinEmail">Email Address</label>
+            <input
+              type="email"
+              id="signinEmail"
+              name="signinEmail"
+              placeholder="Enter your SJSU email"
+            />
+            <div id="signinEmailError" class="error-message">
+              Email must end with @sjsu.edu
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="signinPassword">Password</label>
-          <input
-            type="password"
-            id="signinPassword"
-            name="signinPassword"
-            placeholder="Enter your password"
-          />
-          <div id="signinPasswordError" class="error-message">
-            Password must be longer than 6 characters
+          <div class="form-group">
+            <label for="signinPassword">Password</label>
+            <input
+              type="password"
+              id="signinPassword"
+              name="signinPassword"
+              placeholder="Enter your password"
+            />
+            <div id="signinPasswordError" class="error-message">
+              Password must be longer than 6 characters
+            </div>
           </div>
-        </div>
 
-        <div id="signinServerMessage" class="error-message"></div>
-        <div id="signinSuccessMessage" class="success-message"></div>
+          <div id="signinServerMessage" class="error-message"></div>
+          <div id="signinSuccessMessage" class="success-message"></div>
 
-        <button type="submit" class="signin-btn">Sign In</button>
+          <button type="submit" class="signin-btn">Sign In</button>
 
-        <div class="bottom-link">
-          Don't have an account?
-          <a href="signUp.html">Sign Up</a>
-        </div>
+          <div class="bottom-link">
+            Don't have an account?
+            <a href="signUp.html">Sign Up</a>
+          </div>
 
-        <div class="home-link">
-          <a href="index.html">Back to home</a>
-        </div>
-      </form>
+          <div class="home-link">
+            <a href="index.html">Back to home</a>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 
   <script>
     const signinForm = document.getElementById("signinForm")
@@ -250,7 +266,9 @@
       showServerNotice(
         "Please open this page through the server at http://localhost:8080/signIn, not directly from the file system."
       )
+
       const submitButton = signinForm.querySelector("button[type='submit']")
+
       if (submitButton) {
         submitButton.disabled = true
       }
@@ -328,6 +346,7 @@
             signinServerMessage.textContent = result.message
             signinServerMessage.style.display = "block"
           }
+
           return
         }
 
