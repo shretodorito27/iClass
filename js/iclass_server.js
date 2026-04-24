@@ -184,10 +184,16 @@ function getReservationDateTime(date, time) {
 function getDurationHours(start, end) {
   const startDateTime = getReservationDateTime("1970-01-01", start)
   const endDateTime = getReservationDateTime("1970-01-01", end)
+
   return (endDateTime - startDateTime) / (1000 * 60 * 60)
 }
 
-async function getTotalReservedHoursForUserByDate(email, date, statuses = ["pending", "confirmed"], excludeReservationId = null) {
+async function getTotalReservedHoursForUserByDate(
+  email,
+  date,
+  statuses = ["pending", "confirmed"],
+  excludeReservationId = null
+) {
   const query = {
     email,
     date,
@@ -199,28 +205,29 @@ async function getTotalReservedHoursForUserByDate(email, date, statuses = ["pend
   }
 
   const reservations = await reservationsCollection.find(query).toArray()
-  return reservations.reduce((total, reservation) => {
+
+  return reservations.reduce(function (total, reservation) {
     return total + getDurationHours(reservation.start, reservation.end)
   }, 0)
 }
 
-app.get("/", (req, res) => {
+app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "index.html"))
 })
 
-app.get("/signIn", (req, res) => {
+app.get("/signIn", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "signIn.html"))
 })
 
-app.get("/signUp", (req, res) => {
+app.get("/signUp", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "signUp.html"))
 })
 
-app.get("/signInSuccess", (req, res) => {
+app.get("/signInSuccess", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "signInSuccess.html"))
 })
 
-app.get("/api/verify-email", async (req, res) => {
+app.get("/api/verify-email", async function (req, res) {
   try {
     const token = req.query.token || ""
 
@@ -260,6 +267,7 @@ app.get("/api/verify-email", async (req, res) => {
     `)
   } catch (error) {
     console.error("Email verification error:", error)
+
     return res.status(500).send(`
       <h2>Verification failed</h2>
       <p>An unexpected error occurred during email verification.</p>
@@ -267,7 +275,7 @@ app.get("/api/verify-email", async (req, res) => {
   }
 })
 
-app.post("/api/signup", async (req, res) => {
+app.post("/api/signup", async function (req, res) {
   try {
     const email = (req.body.email || "").trim().toLowerCase()
     const password = req.body.password || ""
@@ -318,21 +326,27 @@ app.post("/api/signup", async (req, res) => {
       createdAt: new Date()
     })
 
-    // Try to send verification email, but auto-verify if it fails (dev mode)
     try {
       await sendVerificationEmail(email, verificationToken)
     } catch (emailError) {
       console.warn("Verification email failed, auto-verifying user:", emailError.message)
+
       await usersCollection.updateOne(
         { email },
         {
-          $set: { isVerified: true, verifiedAt: new Date() },
-          $unset: { verificationToken: "" }
+          $set: {
+            isVerified: true,
+            verifiedAt: new Date()
+          },
+          $unset: {
+            verificationToken: ""
+          }
         }
       )
+
       return res.json({
         success: true,
-        message: "Sign up successful! You can now sign in (email verification was skipped in dev mode)."
+        message: "Sign up successful! You can now sign in."
       })
     }
 
@@ -342,6 +356,7 @@ app.post("/api/signup", async (req, res) => {
     })
   } catch (error) {
     console.error("Sign up error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred during sign up"
@@ -349,7 +364,7 @@ app.post("/api/signup", async (req, res) => {
   }
 })
 
-app.post("/api/signin", async (req, res) => {
+app.post("/api/signin", async function (req, res) {
   try {
     const email = (req.body.email || "").trim().toLowerCase()
     const password = req.body.password || ""
@@ -404,6 +419,7 @@ app.post("/api/signin", async (req, res) => {
     })
   } catch (error) {
     console.error("Sign in error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred during sign in"
@@ -411,7 +427,7 @@ app.post("/api/signin", async (req, res) => {
   }
 })
 
-app.post("/api/reservations", async (req, res) => {
+app.post("/api/reservations", async function (req, res) {
   try {
     const name = (req.body.name || "").trim()
     const email = (req.body.email || "").trim().toLowerCase()
@@ -443,6 +459,7 @@ app.post("/api/reservations", async (req, res) => {
     }
 
     const requestedHours = getDurationHours(start, end)
+
     if (requestedHours > 6) {
       return res.status(400).json({
         success: false,
@@ -451,6 +468,7 @@ app.post("/api/reservations", async (req, res) => {
     }
 
     const bookedHours = await getTotalReservedHoursForUserByDate(email, date)
+
     if (bookedHours + requestedHours > 6) {
       return res.status(400).json({
         success: false,
@@ -476,20 +494,14 @@ app.post("/api/reservations", async (req, res) => {
       attendedAt: null
     })
 
-    // Try to send confirmation email, but auto-confirm if it fails (dev mode)
     try {
       await sendReservationConfirmationEmail(email, confirmationToken)
     } catch (emailError) {
-      console.warn("Reservation email failed, auto-confirming:", emailError.message)
-      await reservationsCollection.updateOne(
-        { confirmationToken },
-        {
-          $set: { status: "confirmed", confirmedAt: new Date() }
-        }
-      )
-      return res.json({
-        success: true,
-        message: "Reservation created and confirmed (email skipped in dev mode)."
+      console.warn("Reservation email failed:", emailError.message)
+
+      return res.status(500).json({
+        success: false,
+        message: "Reservation request was created, but the confirmation email could not be sent. Please contact support."
       })
     }
 
@@ -499,6 +511,7 @@ app.post("/api/reservations", async (req, res) => {
     })
   } catch (error) {
     console.error("Reservation request error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while creating the reservation."
@@ -506,7 +519,7 @@ app.post("/api/reservations", async (req, res) => {
   }
 })
 
-app.get("/api/confirm-reservation", async (req, res) => {
+app.get("/api/confirm-reservation", async function (req, res) {
   try {
     const token = req.query.token || ""
 
@@ -530,6 +543,7 @@ app.get("/api/confirm-reservation", async (req, res) => {
     }
 
     const reservationHours = getDurationHours(reservation.start, reservation.end)
+
     const existingConfirmedHours = await getTotalReservedHoursForUserByDate(
       reservation.email,
       reservation.date,
@@ -564,6 +578,7 @@ app.get("/api/confirm-reservation", async (req, res) => {
     `)
   } catch (error) {
     console.error("Reservation confirmation error:", error)
+
     return res.status(500).send(`
       <h2>Reservation confirmation failed</h2>
       <p>An unexpected error occurred.</p>
@@ -571,7 +586,7 @@ app.get("/api/confirm-reservation", async (req, res) => {
   }
 })
 
-app.get("/api/my-reservation", async (req, res) => {
+app.get("/api/my-reservation", async function (req, res) {
   try {
     const email = (req.query.email || "").trim().toLowerCase()
 
@@ -585,10 +600,13 @@ app.get("/api/my-reservation", async (req, res) => {
     const reservation = await reservationsCollection.findOne(
       {
         email,
-        status: { $in: ["pending", "confirmed"] }
+        status: "confirmed"
       },
       {
-        sort: { date: 1, start: 1 }
+        sort: {
+          date: 1,
+          start: 1
+        }
       }
     )
 
@@ -598,6 +616,7 @@ app.get("/api/my-reservation", async (req, res) => {
     })
   } catch (error) {
     console.error("Get current reservation error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while loading the current reservation."
@@ -605,7 +624,7 @@ app.get("/api/my-reservation", async (req, res) => {
   }
 })
 
-app.get("/api/reservation-history", async (req, res) => {
+app.get("/api/reservation-history", async function (req, res) {
   try {
     const email = (req.query.email || "").trim().toLowerCase()
 
@@ -619,9 +638,13 @@ app.get("/api/reservation-history", async (req, res) => {
     const history = await reservationsCollection
       .find({
         email,
-        status: { $in: ["cancelled", "attended"] }
+        status: {
+          $in: ["cancelled", "attended"]
+        }
       })
-      .sort({ createdAt: -1 })
+      .sort({
+        createdAt: -1
+      })
       .toArray()
 
     return res.json({
@@ -630,6 +653,7 @@ app.get("/api/reservation-history", async (req, res) => {
     })
   } catch (error) {
     console.error("Get reservation history error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while loading reservation history."
@@ -637,7 +661,7 @@ app.get("/api/reservation-history", async (req, res) => {
   }
 })
 
-app.post("/api/cancel-reservation", async (req, res) => {
+app.post("/api/cancel-reservation", async function (req, res) {
   try {
     const email = (req.body.email || "").trim().toLowerCase()
 
@@ -650,13 +674,13 @@ app.post("/api/cancel-reservation", async (req, res) => {
 
     const reservation = await reservationsCollection.findOne({
       email,
-      status: { $in: ["pending", "confirmed"] }
+      status: "confirmed"
     })
 
     if (!reservation) {
       return res.status(404).json({
         success: false,
-        message: "No current reservation found."
+        message: "No current confirmed reservation found."
       })
     }
 
@@ -676,6 +700,7 @@ app.post("/api/cancel-reservation", async (req, res) => {
     })
   } catch (error) {
     console.error("Cancel reservation error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while cancelling the reservation."
@@ -683,7 +708,7 @@ app.post("/api/cancel-reservation", async (req, res) => {
   }
 })
 
-app.post("/api/mark-attended", async (req, res) => {
+app.post("/api/mark-attended", async function (req, res) {
   try {
     const email = (req.body.email || "").trim().toLowerCase()
 
@@ -722,6 +747,7 @@ app.post("/api/mark-attended", async (req, res) => {
     })
   } catch (error) {
     console.error("Mark attended error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while updating the reservation."
@@ -729,7 +755,7 @@ app.post("/api/mark-attended", async (req, res) => {
   }
 })
 
-app.post("/api/complaints", async (req, res) => {
+app.post("/api/complaints", async function (req, res) {
   try {
     const name = (req.body.name || "").trim()
     const email = (req.body.email || "").trim().toLowerCase()
@@ -757,11 +783,10 @@ app.post("/api/complaints", async (req, res) => {
 
     await complaintsCollection.insertOne(complaint)
 
-    // Try to send email, but don't fail the request if email is misconfigured
     try {
       await sendComplaintEmail(complaint)
     } catch (emailError) {
-      console.warn("Email notification failed (complaint still saved):", emailError.message)
+      console.warn("Email notification failed. Complaint still saved:", emailError.message)
     }
 
     return res.json({
@@ -770,6 +795,7 @@ app.post("/api/complaints", async (req, res) => {
     })
   } catch (error) {
     console.error("Complaint submission error:", error)
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while submitting your complaint."
@@ -778,12 +804,12 @@ app.post("/api/complaints", async (req, res) => {
 })
 
 connectToMongoDB()
-  .then(() => {
-    app.listen(PORT, "0.0.0.0", () => {
+  .then(function () {
+    app.listen(PORT, "0.0.0.0", function () {
       console.log("Server running localhost:8080/")
       console.log(`BASE_URL for email verification: ${BASE_URL}`)
     })
   })
-  .catch((error) => {
+  .catch(function (error) {
     console.error("Failed to connect to MongoDB:", error)
   })
