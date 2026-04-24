@@ -147,6 +147,29 @@ function getReservationDateTime(date, time) {
   return new Date(`${date}T${time}:00`)
 }
 
+function getDurationHours(start, end) {
+  const startDateTime = getReservationDateTime("1970-01-01", start)
+  const endDateTime = getReservationDateTime("1970-01-01", end)
+  return (endDateTime - startDateTime) / (1000 * 60 * 60)
+}
+
+async function getTotalReservedHoursForUserByDate(email, date, statuses = ["pending", "confirmed"], excludeReservationId = null) {
+  const query = {
+    email,
+    date,
+    status: { $in: statuses }
+  }
+
+  if (excludeReservationId) {
+    query._id = { $ne: excludeReservationId }
+  }
+
+  const reservations = await reservationsCollection.find(query).toArray()
+  return reservations.reduce((total, reservation) => {
+    return total + getDurationHours(reservation.start, reservation.end)
+  }, 0)
+}
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "index.html"))
 })
@@ -369,27 +392,19 @@ app.post("/api/reservations", async (req, res) => {
       })
     }
 
-    const existingConfirmedReservation = await reservationsCollection.findOne({
-      email,
-      status: "confirmed"
-    })
-
-    if (existingConfirmedReservation) {
-      return res.status(409).json({
+    const requestedHours = getDurationHours(start, end)
+    if (requestedHours > 6) {
+      return res.status(400).json({
         success: false,
-        message: "You already have a current confirmed reservation."
+        message: "Each reservation may be at most 6 hours long."
       })
     }
 
-    const existingPendingReservation = await reservationsCollection.findOne({
-      email,
-      status: "pending"
-    })
-
-    if (existingPendingReservation) {
-      return res.status(409).json({
+    const bookedHours = await getTotalReservedHoursForUserByDate(email, date)
+    if (bookedHours + requestedHours > 6) {
+      return res.status(400).json({
         success: false,
-        message: "You already have a pending reservation confirmation in your email."
+        message: `You can only book up to 6 hours per day. You already have ${bookedHours.toFixed(2)} hours reserved on ${date}.`
       })
     }
 
@@ -446,6 +461,21 @@ app.get("/api/confirm-reservation", async (req, res) => {
       return res.status(400).send(`
         <h2>Reservation confirmation failed</h2>
         <p>This confirmation link is invalid or has already been used.</p>
+      `)
+    }
+
+    const reservationHours = getDurationHours(reservation.start, reservation.end)
+    const existingConfirmedHours = await getTotalReservedHoursForUserByDate(
+      reservation.email,
+      reservation.date,
+      ["confirmed"],
+      reservation._id
+    )
+
+    if (existingConfirmedHours + reservationHours > 6) {
+      return res.status(400).send(`
+        <h2>Reservation confirmation failed</h2>
+        <p>Confirming this reservation would exceed the 6 hour daily limit for ${reservation.date}.</p>
       `)
     }
 
