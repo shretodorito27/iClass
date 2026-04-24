@@ -31,22 +31,22 @@ export function setupNavTabs() {
     // Show selected page
     targetPage.classList.add("active")
 
-    // Always start at top
-    window.scrollTo(0, 0)
+    // Force scroll to top after page is shown
+    requestAnimationFrame(function () {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto"
+      })
+    })
   }
 
   function getInitialPage() {
-    const storedPage = sessionStorage.getItem("targetPage")
-
-    if (storedPage) {
-      sessionStorage.removeItem("targetPage")
-      return storedPage
-    }
-
     const hash = window.location.hash.replace("#", "")
     return hash || "homePage"
   }
 
+  // Prevent browser from restoring old scroll position
   if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual"
   }
@@ -62,9 +62,8 @@ export function setupNavTabs() {
         return
       }
 
+      history.pushState(null, "", `#${pageId}`)
       showPage(pageId)
-      history.replaceState(null, "", `#${pageId}`)
-      window.scrollTo(0, 0)
     })
   })
 
@@ -79,23 +78,42 @@ export function setupNavTabs() {
         return
       }
 
+      history.pushState(null, "", `#${pageId}`)
       showPage(pageId)
-      history.replaceState(null, "", `#${pageId}`)
-      window.scrollTo(0, 0)
     })
   })
 
-  // First load
-  const initialPage = getInitialPage()
-  showPage(initialPage)
+  // Show correct page on first load
+  showPage(getInitialPage())
 
+  // Reveal page after correct section is chosen
   document.body.classList.remove("hidden")
-  window.scrollTo(0, 0)
+
+  // If coming from myProfile or another page, force top once
+  if (sessionStorage.getItem("forceScrollTop") === "true") {
+    sessionStorage.removeItem("forceScrollTop")
+
+    requestAnimationFrame(function () {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto"
+      })
+    })
+  }
+
+  // Extra safety after full page load
+  window.addEventListener("load", function () {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto"
+    })
+  })
 
   // Handle hash changes while already on index page
   window.addEventListener("hashchange", function () {
-    const pageId = window.location.hash.replace("#", "") || "homePage"
+    const pageId = getInitialPage()
     showPage(pageId)
-    window.scrollTo(0, 0)
   })
 }
