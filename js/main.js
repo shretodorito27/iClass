@@ -6,7 +6,8 @@ import { setupComplaints } from "./complaints.js"
 // Detect which page we are on
 const onIndex =
   window.location.pathname.endsWith("index.html") ||
-  window.location.pathname === "/"
+  window.location.pathname === "/" ||
+  window.location.pathname.endsWith("/")
 
 const onReserve = window.location.pathname.endsWith("reserve.html")
 const onSignInSuccess = window.location.pathname.endsWith("signInSuccess.html")
@@ -21,6 +22,7 @@ function requireLoginForProtectedPage(targetAfterLogin = null) {
     if (targetAfterLogin) {
       localStorage.setItem("redirectAfterLogin", targetAfterLogin)
     }
+
     window.location.href = "./signIn.html"
     return false
   }
@@ -32,11 +34,14 @@ function updateAuthLink() {
   const authLink = document.getElementById("authLink")
   if (!authLink) return
 
-  if (isLoggedIn()) {
-    authLink.textContent = "Sign Out"
-    authLink.href = "#"
+  const newAuthLink = authLink.cloneNode(true)
+  authLink.parentNode.replaceChild(newAuthLink, authLink)
 
-    authLink.addEventListener("click", function (event) {
+  if (isLoggedIn()) {
+    newAuthLink.textContent = "Sign Out"
+    newAuthLink.href = "#"
+
+    newAuthLink.addEventListener("click", function (event) {
       event.preventDefault()
 
       const confirmed = window.confirm("Are you sure you want to sign out?")
@@ -51,8 +56,8 @@ function updateAuthLink() {
       window.location.href = "./index.html"
     })
   } else {
-    authLink.textContent = "Sign In"
-    authLink.href = "./signIn.html"
+    newAuthLink.textContent = "Sign In"
+    newAuthLink.href = "./signIn.html"
   }
 }
 
@@ -60,11 +65,15 @@ function updateProfileLink() {
   const profileLink = document.getElementById("profileLink")
   if (!profileLink) return
 
-  profileLink.style.display = isLoggedIn() ? "inline-block" : "none"
+  if (isLoggedIn()) {
+    profileLink.style.display = "inline-block"
+  } else {
+    profileLink.style.display = "none"
+  }
 }
 
 function setupReserveLinks() {
-  document.querySelectorAll(".reserve-link").forEach(link => {
+  document.querySelectorAll(".reserve-link").forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault()
 
@@ -80,6 +89,28 @@ function setupReserveLinks() {
   })
 }
 
+function openPageFromHash() {
+  const hash = window.location.hash
+
+  if (!hash) {
+    return
+  }
+
+  setTimeout(function () {
+    const targetLink = document.querySelector(`a[href="${hash}"]`)
+    const targetSection = document.querySelector(hash)
+
+    if (targetLink) {
+      targetLink.click()
+    } else if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      })
+    }
+  }, 100)
+}
+
 // Run only what each page needs
 if (onIndex) {
   updateAuthLink()
@@ -88,6 +119,11 @@ if (onIndex) {
   loadAndRenderSchedule()
   setupReserveLinks()
   setupComplaints()
+  openPageFromHash()
+
+  window.addEventListener("hashchange", function () {
+    openPageFromHash()
+  })
 }
 
 if (onReserve) {
@@ -114,8 +150,10 @@ if (onReserve) {
 
     const params = new URLSearchParams(window.location.search)
     const selectedRoom = params.get("room")
+
     if (selectedRoom) {
       const roomSelect = document.getElementById("reserveRoom")
+
       if (roomSelect) {
         roomSelect.value = selectedRoom
       }
