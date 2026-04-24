@@ -97,6 +97,7 @@ body {
   border-bottom: 4px solid var(--sjsu-blue);
   position: sticky;
   top: 0;
+  z-index: 1000;
 }
 
 /* Logo in navbar */
