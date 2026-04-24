@@ -30,19 +30,11 @@ export function setupNavTabs() {
 
     // Show selected page
     targetPage.classList.add("active")
-
-    // Always go to top of page
-    window.scrollTo(0, 0)
   }
 
   function getInitialPage() {
     const hash = window.location.hash.replace("#", "")
     return hash || "homePage"
-  }
-
-  // Prevent browser from restoring old scroll position
-  if ("scrollRestoration" in history) {
-    history.scrollRestoration = "manual"
   }
 
   // Navbar clicks
@@ -82,9 +74,6 @@ export function setupNavTabs() {
 
   // Reveal page after correct section is chosen
   document.body.classList.remove("hidden")
-
-  // Make sure first load is also at the top
-  window.scrollTo(0, 0)
 
   // Handle hash changes while already on index page
   window.addEventListener("hashchange", function () {
