@@ -32,16 +32,24 @@ export function setupNavTabs() {
     targetPage.classList.add("active")
   }
 
+  function getInitialPage() {
+    const hash = window.location.hash.replace("#", "")
+    return hash || "homePage"
+  }
+
   // Navbar clicks
   document.querySelectorAll(".navlink[data-page]").forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault()
 
       const pageId = link.dataset.page
-      showPage(pageId)
 
-      // Update URL hash
-      window.location.hash = pageId
+      if (!pageId) {
+        return
+      }
+
+      showPage(pageId)
+      history.pushState(null, "", `#${pageId}`)
     })
   })
 
@@ -51,26 +59,25 @@ export function setupNavTabs() {
       event.preventDefault()
 
       const pageId = btn.dataset.go
-      showPage(pageId)
 
-      // Update URL hash
-      window.location.hash = pageId
+      if (!pageId) {
+        return
+      }
+
+      showPage(pageId)
+      history.pushState(null, "", `#${pageId}`)
     })
   })
 
-  // Handle links like index.html#aboutPage
-  const hash = window.location.hash
+  // Show correct page on first load
+  showPage(getInitialPage())
 
-  if (hash) {
-    const pageId = hash.replace("#", "")
-    showPage(pageId)
-  } else {
-    showPage("homePage")
-  }
+  // Reveal page after correct section is chosen
+  document.body.classList.remove("hidden")
 
   // Handle hash changes while already on index page
   window.addEventListener("hashchange", function () {
-    const pageId = window.location.hash.replace("#", "")
+    const pageId = getInitialPage()
     showPage(pageId)
   })
 }

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> iClass </title>
+    <title>iClass</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./reservation.css">
   </head>
 
-  <body>
+  <body class="hidden">
     <nav class="navbar">
       <a href="#" class="navlink" data-page="homePage">
         <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
       </a>
 
       <ul class="navlinks">
-        <li><a href="#" class="navlink active" data-page="homePage">Home</a></li>
+        <li><a href="#" class="navlink" data-page="homePage">Home</a></li>
         <li><a href="#" class="navlink" data-page="availablePage">Available Now</a></li>
         <li><a href="#" class="navlink" data-page="schedulePage">All Schedules</a></li>
         <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
@@ -26,7 +26,7 @@
     </nav>
 
     <main class="container">
-      <section id="homePage" class="page active">
+      <section id="homePage" class="page">
         <h1>iClass</h1>
         <p>Find available Engineering classrooms and view schedules.</p>
         <div class="home-actions">
@@ -35,7 +35,7 @@
       </section>
 
       <section id="availablePage" class="page">
-        <h1> Currently Available Rooms </h1>
+        <h1>Currently Available Rooms</h1>
         <div id="rooms"></div>
       </section>
 
@@ -43,7 +43,7 @@
         <h1>All Classroom Schedules</h1>
 
         <div class="controls">
-          <input id="searchInput" type="text" placeholder="Search room, course, or day (e.g., ENG-103, CMPE, Tue)"/>
+          <input id="searchInput" type="text" placeholder="Search room, course, or day (e.g., ENG-103, CMPE, Tue)">
         </div>
 
         <div id="scheduleTable"></div>
@@ -79,16 +79,16 @@
         <h1>Submit a Complaint</h1>
         <div class="complaints-container">
           <p>If you have experienced an issue or have a complaint about the iClass system or a classroom, please submit it below. Your feedback is important and helps us improve the system.</p>
-          
+
           <form id="complaintForm" class="complaint-form">
             <div class="form-group">
               <label for="complaintName">Your Name:</label>
-              <input type="text" id="complaintName" name="name" required />
+              <input type="text" id="complaintName" name="name" required>
             </div>
 
             <div class="form-group">
               <label for="complaintEmail">Email Address:</label>
-              <input type="email" id="complaintEmail" name="email" required />
+              <input type="email" id="complaintEmail" name="email" required>
             </div>
 
             <div class="form-group">
@@ -105,12 +105,12 @@
 
             <div class="form-group">
               <label for="complaintRoom">Room (Optional):</label>
-              <input type="text" id="complaintRoom" name="room" placeholder="e.g., ENG-103" />
+              <input type="text" id="complaintRoom" name="room" placeholder="e.g., ENG-103">
             </div>
 
             <div class="form-group">
               <label for="complaintDate">Date of Incident (Optional):</label>
-              <input type="date" id="complaintDate" name="date" />
+              <input type="date" id="complaintDate" name="date">
             </div>
 
             <div class="form-group">
