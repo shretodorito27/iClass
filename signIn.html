@@ -85,7 +85,8 @@
       outline: none;
     }
 
-    input:focus {
+    input[type="email"]:focus,
+    input[type="password"]:focus {
       border-color: #1565d8;
     }
 
@@ -146,7 +147,6 @@
 </head>
 
 <body>
-
   <div class="signin-box">
     <div class="logo-section">
       <img src="images/iClasslogo.jpg" alt="iClass Logo" class="logo" />
@@ -160,7 +160,12 @@
       <form id="signinForm">
         <div class="form-group">
           <label for="signinEmail">Email Address</label>
-          <input type="email" id="signinEmail" placeholder="Enter your SJSU email" />
+          <input
+            type="email"
+            id="signinEmail"
+            name="signinEmail"
+            placeholder="Enter your SJSU email"
+          />
           <div id="signinEmailError" class="error-message">
             Email must end with @sjsu.edu
           </div>
@@ -168,13 +173,19 @@
 
         <div class="form-group">
           <label for="signinPassword">Password</label>
-          <input type="password" id="signinPassword" placeholder="Enter your password" />
+          <input
+            type="password"
+            id="signinPassword"
+            name="signinPassword"
+            placeholder="Enter your password"
+          />
           <div id="signinPasswordError" class="error-message">
             Password must be longer than 6 characters
           </div>
         </div>
 
         <div id="signinServerMessage" class="error-message"></div>
+        <div id="signinSuccessMessage" class="success-message"></div>
 
         <button type="submit" class="signin-btn">Sign In</button>
 
@@ -190,5 +201,128 @@
     </div>
   </div>
 
+  <script>
+    const signinForm = document.getElementById("signinForm")
+    const signinEmailInput = document.getElementById("signinEmail")
+    const signinPasswordInput = document.getElementById("signinPassword")
+    const signinEmailError = document.getElementById("signinEmailError")
+    const signinPasswordError = document.getElementById("signinPasswordError")
+    const signinServerMessage = document.getElementById("signinServerMessage")
+    const signinSuccessMessage = document.getElementById("signinSuccessMessage")
+
+    function hideSigninMessages() {
+      signinServerMessage.style.display = "none"
+      signinSuccessMessage.style.display = "none"
+    }
+
+    function showServerNotice(message) {
+      signinServerMessage.textContent = message
+      signinServerMessage.style.display = "block"
+    }
+
+    if (window.location.protocol === "file:") {
+      showServerNotice(
+        "Please open this page through the server at http://localhost:8080/signIn, not directly from the file system."
+      )
+
+      const submitButton = signinForm.querySelector("button[type='submit']")
+
+      if (submitButton) {
+        submitButton.disabled = true
+      }
+    }
+
+    function validateSigninEmail() {
+      const emailValue = signinEmailInput.value.trim().toLowerCase()
+
+      if (!emailValue.endsWith("@sjsu.edu")) {
+        signinEmailError.textContent = "Email must end with @sjsu.edu"
+        signinEmailError.style.display = "block"
+        return false
+      }
+
+      signinEmailError.style.display = "none"
+      return true
+    }
+
+    function validateSigninPassword() {
+      const passwordValue = signinPasswordInput.value
+
+      if (passwordValue.length <= 6) {
+        signinPasswordError.textContent = "Password must be longer than 6 characters"
+        signinPasswordError.style.display = "block"
+        return false
+      }
+
+      signinPasswordError.style.display = "none"
+      return true
+    }
+
+    signinEmailInput.addEventListener("input", function () {
+      validateSigninEmail()
+      hideSigninMessages()
+    })
+
+    signinPasswordInput.addEventListener("input", function () {
+      validateSigninPassword()
+      hideSigninMessages()
+    })
+
+    signinForm.addEventListener("submit", async function (event) {
+      event.preventDefault()
+      hideSigninMessages()
+
+      const isEmailValid = validateSigninEmail()
+      const isPasswordValid = validateSigninPassword()
+
+      if (!isEmailValid || !isPasswordValid) {
+        return
+      }
+
+      try {
+        const response = await fetch("/api/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: signinEmailInput.value.trim(),
+            password: signinPasswordInput.value
+          })
+        })
+
+        const result = await response.json()
+
+        if (!response.ok) {
+          if (result.field === "email") {
+            signinEmailError.textContent = result.message
+            signinEmailError.style.display = "block"
+          } else if (result.field === "password") {
+            signinPasswordError.textContent = result.message
+            signinPasswordError.style.display = "block"
+          } else {
+            signinServerMessage.textContent = result.message
+            signinServerMessage.style.display = "block"
+          }
+
+          return
+        }
+
+        localStorage.setItem("isLoggedIn", "true")
+        localStorage.setItem("userEmail", signinEmailInput.value.trim().toLowerCase())
+
+        const redirectPage =
+          localStorage.getItem("redirectAfterLogin") || "./signInSuccess.html"
+
+        localStorage.removeItem("redirectAfterLogin")
+
+        signinForm.reset()
+        window.location.href = redirectPage
+      } catch (error) {
+        signinServerMessage.textContent = "Unable to connect to the server"
+        signinServerMessage.style.display = "block"
+      }
+    })
+  </script>
 </body>
 </html>
