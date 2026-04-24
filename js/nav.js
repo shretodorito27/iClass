@@ -1,35 +1,76 @@
- //-- Navigation bar tab switching --
- export function setupNavTabs(){
-    function showPage(pageId){
-        //turn off all nav highlights (reomve underline/bold from every navbar link)
-        document.querySelectorAll(".navlink").forEach(l=>l.classList.remove("active"));
-        //removes .active from every section so CSS hides them all
-        document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-        
-        //find matching navbar link and highlight it if exist
-        const nav = document.querySelector(`.navlink[data-page="${pageId}"]`);
-        if(nav) nav.classList.add("active");
-
-        //finds the correct selection and adds .active making it visible
-        document.getElementById(pageId).classList.add("active");
+// Navigation bar tab switching
+export function setupNavTabs() {
+  function showPage(pageId) {
+    if (!pageId) {
+      return
     }
 
-    //navbar clicks
-    document.querySelectorAll(".navlink[data-page]").forEach(link => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          showPage(link.dataset.page);
-        });
-      });
+    const targetPage = document.getElementById(pageId)
 
-    //home page buttons (data-go)
-    document.querySelectorAll("[data-go]").forEach(btn=>{
-        btn.addEventListener("click",e=>{
-            e.preventDefault();
-            showPage(btn.dataset.go);
-        });
-    });
- }
-     
+    if (!targetPage) {
+      return
+    }
 
-    
+    // Remove active from all navbar links
+    document.querySelectorAll(".navlink").forEach(function (link) {
+      link.classList.remove("active")
+    })
+
+    // Hide all pages
+    document.querySelectorAll(".page").forEach(function (page) {
+      page.classList.remove("active")
+    })
+
+    // Highlight matching navbar link
+    const nav = document.querySelector(`.navlink[data-page="${pageId}"]`)
+
+    if (nav) {
+      nav.classList.add("active")
+    }
+
+    // Show selected page
+    targetPage.classList.add("active")
+  }
+
+  // Navbar clicks
+  document.querySelectorAll(".navlink[data-page]").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault()
+
+      const pageId = link.dataset.page
+      showPage(pageId)
+
+      // Update URL hash
+      window.location.hash = pageId
+    })
+  })
+
+  // Home page buttons
+  document.querySelectorAll("[data-go]").forEach(function (btn) {
+    btn.addEventListener("click", function (event) {
+      event.preventDefault()
+
+      const pageId = btn.dataset.go
+      showPage(pageId)
+
+      // Update URL hash
+      window.location.hash = pageId
+    })
+  })
+
+  // Handle links like index.html#aboutPage
+  const hash = window.location.hash
+
+  if (hash) {
+    const pageId = hash.replace("#", "")
+    showPage(pageId)
+  } else {
+    showPage("homePage")
+  }
+
+  // Handle hash changes while already on index page
+  window.addEventListener("hashchange", function () {
+    const pageId = window.location.hash.replace("#", "")
+    showPage(pageId)
+  })
+}
