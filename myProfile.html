@@ -160,13 +160,13 @@
     </a>
 
     <ul class="navlinks">
-      <li><a href="./index.html" class="navlink jump-top-link">Home</a></li>
-      <li><a href="./index.html#availablePage" class="navlink jump-top-link">Available Now</a></li>
-      <li><a href="./index.html#schedulePage" class="navlink jump-top-link">All Schedules</a></li>
+      <li><a href="./index.html" class="navlink">Home</a></li>
+      <li><a href="./index.html#availablePage" class="navlink">Available Now</a></li>
+      <li><a href="./index.html#schedulePage" class="navlink">All Schedules</a></li>
       <li><a href="./reserve.html" class="navlink reserve-link">Reserve</a></li>
-      <li><a href="./index.html#aboutPage" class="navlink jump-top-link">About</a></li>
-      <li><a href="./index.html#rulesPage" class="navlink jump-top-link">Rules</a></li>
-      <li><a href="./index.html#complaintsPage" class="navlink jump-top-link">Complaints</a></li>
+      <li><a href="./index.html#aboutPage" class="navlink">About</a></li>
+      <li><a href="./index.html#rulesPage" class="navlink">Rules</a></li>
+      <li><a href="./index.html#complaintsPage" class="navlink">Complaints</a></li>
       <li><a href="./myProfile.html" class="navlink active" id="profileLink" style="display: none;">My Profile</a></li>
       <li><a href="./signIn.html" class="navlink" id="authLink">Sign In</a></li>
     </ul>
@@ -228,12 +228,6 @@
   </main>
 
   <script>
-    document.querySelectorAll(".jump-top-link").forEach(function (link) {
-      link.addEventListener("click", function () {
-        sessionStorage.setItem("forceScrollTop", "true")
-      })
-    })
-
     const profileDisplaySection = document.getElementById("profileDisplaySection")
     const profileEditSection = document.getElementById("profileEditSection")
 

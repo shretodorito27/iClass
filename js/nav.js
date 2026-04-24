@@ -31,14 +31,8 @@ export function setupNavTabs() {
     // Show selected page
     targetPage.classList.add("active")
 
-    // Force scroll to top after page is shown
-    requestAnimationFrame(function () {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "auto"
-      })
-    })
+    // Always go to top of page
+    window.scrollTo(0, 0)
   }
 
   function getInitialPage() {
@@ -51,7 +45,7 @@ export function setupNavTabs() {
     history.scrollRestoration = "manual"
   }
 
-  // Navbar clicks inside index.html
+  // Navbar clicks
   document.querySelectorAll(".navlink[data-page]").forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault()
@@ -62,12 +56,12 @@ export function setupNavTabs() {
         return
       }
 
-      history.pushState(null, "", `#${pageId}`)
       showPage(pageId)
+      history.pushState(null, "", `#${pageId}`)
     })
   })
 
-  // Buttons like homepage buttons
+  // Home page buttons
   document.querySelectorAll("[data-go]").forEach(function (btn) {
     btn.addEventListener("click", function (event) {
       event.preventDefault()
@@ -78,8 +72,8 @@ export function setupNavTabs() {
         return
       }
 
-      history.pushState(null, "", `#${pageId}`)
       showPage(pageId)
+      history.pushState(null, "", `#${pageId}`)
     })
   })
 
@@ -89,27 +83,8 @@ export function setupNavTabs() {
   // Reveal page after correct section is chosen
   document.body.classList.remove("hidden")
 
-  // If coming from myProfile or another page, force top once
-  if (sessionStorage.getItem("forceScrollTop") === "true") {
-    sessionStorage.removeItem("forceScrollTop")
-
-    requestAnimationFrame(function () {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "auto"
-      })
-    })
-  }
-
-  // Extra safety after full page load
-  window.addEventListener("load", function () {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "auto"
-    })
-  })
+  // Make sure first load is also at the top
+  window.scrollTo(0, 0)
 
   // Handle hash changes while already on index page
   window.addEventListener("hashchange", function () {
