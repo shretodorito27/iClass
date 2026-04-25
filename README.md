@@ -1,4 +1,3 @@
-````markdown id="fixed-readme"
 <h1>
   <img src="./images/iClasslogo.jpg" width="50" style="vertical-align: middle;">
   iClass
@@ -226,5 +225,4 @@ https://github.com/shretodorito27/iClass
 iClass Development Team
 
 ---
-````
 
