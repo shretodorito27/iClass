@@ -499,7 +499,7 @@ app.post("/api/reservations", async function (req, res) {
       })
     }
 
-    const bookedHours = await getTotalReservedHoursForUserByDate(email, date)
+    const bookedHours = await getTotalReservedHoursForUserByDate(email, date, ["pending", "confirmed"])
 
     if (bookedHours + requestedHours > 6) {
       return res.status(400).json({
@@ -510,7 +510,7 @@ app.post("/api/reservations", async function (req, res) {
 
     const confirmationToken = createReservationToken()
 
-    await reservationsCollection.insertOne({
+    const insertResult = await reservationsCollection.insertOne({
       name,
       email,
       studentId,
@@ -531,9 +531,12 @@ app.post("/api/reservations", async function (req, res) {
     } catch (emailError) {
       console.warn("Reservation email failed:", emailError.message)
 
+      // Remove the reservation if email could not be sent
+      await reservationsCollection.deleteOne({ _id: insertResult.insertedId })
+
       return res.status(500).json({
         success: false,
-        message: "Reservation request was created, but the confirmation email could not be sent. Please contact support."
+        message: "Reservation was not saved because the confirmation email could not be sent."
       })
     }
 
