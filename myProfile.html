@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Profile - iClass</title>
   <link rel="stylesheet" href="./styles.css">
-
   <style>
     .profile-container {
       max-width: 1100px;
@@ -152,23 +151,24 @@
     }
   </style>
 </head>
-
 <body>
   <nav class="navbar">
-    <a href="./index.html" class="navlink">
+    <a href="index.html" class="navlink">
       <img src="./images/iClasslogo.jpg" alt="Home" class="logo-button">
     </a>
 
     <ul class="navlinks">
-      <li><a href="./index.html" class="navlink">Home</a></li>
-      <li><a href="./index.html#availablePage" class="navlink">Available Now</a></li>
-      <li><a href="./index.html#schedulePage" class="navlink">All Schedules</a></li>
-      <li><a href="./reserve.html" class="navlink reserve-link">Reserve</a></li>
-      <li><a href="./index.html#aboutPage" class="navlink">About</a></li>
-      <li><a href="./index.html#rulesPage" class="navlink">Rules</a></li>
-      <li><a href="./index.html#complaintsPage" class="navlink">Complaints</a></li>
-      <li><a href="./myProfile.html" class="navlink active" id="profileLink" style="display: none;">My Profile</a></li>
-      <li><a href="./signIn.html" class="navlink" id="authLink">Sign In</a></li>
+      <li><a href="index.html" class="navlink">Home</a></li>
+      <li><a href="index.html#availablePage" class="navlink">Available Now</a></li>
+      <li><a href="index.html#schedulePage" class="navlink">All Schedules</a></li>
+      <li><a href="reserve.html" class="navlink reserve-link">Reserve</a></li>
+
+      <li><a href="index.html#aboutPage" class="navlink">About</a></li>
+      <li><a href="index.html#rulesPage" class="navlink">Rules</a></li>
+      <li><a href="index.html#complaintsPage" class="navlink">Complaints</a></li>
+
+      <li><a href="myProfile.html" class="navlink active" id="profileLink" style="display: none;">My Profile</a></li>
+      <li><a href="signIn.html" class="navlink" id="authLink">Sign In</a></li>
     </ul>
   </nav>
 
@@ -216,7 +216,7 @@
       </section>
 
       <section class="profile-card">
-        <h2>Most Recent Reservation</h2>
+        <h2>Upcoming Reservation</h2>
         <div id="currentReservationContainer"></div>
       </section>
     </div>
@@ -273,7 +273,6 @@
 
     async function getCurrentReservationFromServer() {
       const email = localStorage.getItem("userEmail")
-
       if (!email) {
         return null
       }
@@ -290,7 +289,6 @@
 
     async function getReservationHistoryFromServer() {
       const email = localStorage.getItem("userEmail")
-
       if (!email) {
         return []
       }
@@ -344,7 +342,6 @@
             <p><strong>Date:</strong> ${reservation.date}</p>
             <p><strong>Time:</strong> ${reservation.start} - ${reservation.end}</p>
             <p><strong>Duration:</strong> ${formatDuration(reservation.start, reservation.end)}</p>
-
             <div class="profile-actions">
               <button id="cancelReservationBtn" class="profile-btn danger-btn">Cancel Reservation</button>
               <button id="attendedReservationBtn" class="profile-btn secondary-btn">Mark as Attended</button>
@@ -358,7 +355,6 @@
 
         cancelBtn.addEventListener("click", async function () {
           const confirmed = window.confirm("Are you sure you want to cancel this reservation?")
-
           if (!confirmed) {
             return
           }
@@ -372,7 +368,6 @@
           })
 
           const result = await response.json()
-
           if (!response.ok) {
             alert(result.message)
             return
@@ -384,7 +379,6 @@
 
         attendedBtn.addEventListener("click", async function () {
           const confirmed = window.confirm("Mark this reservation as attended?")
-
           if (!confirmed) {
             return
           }
@@ -398,7 +392,6 @@
           })
 
           const result = await response.json()
-
           if (!response.ok) {
             alert(result.message)
             return
