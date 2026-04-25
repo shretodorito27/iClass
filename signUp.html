@@ -75,10 +75,12 @@
       font-size: 16px;
       border: 1px solid #9e9e9e;
       border-radius: 2px;
+      box-sizing: border-box;
     }
 
     input:focus {
       border-color: #1565d8;
+      outline: none;
     }
 
     .error-message {
@@ -117,7 +119,6 @@
 </head>
 
 <body>
-
   <div class="signup-box">
     <div class="logo-section">
       <img src="images/iClasslogo.jpg" class="logo" />
@@ -130,19 +131,19 @@
 
       <form id="signupForm">
         <div class="form-group">
-          <label>Email</label>
+          <label for="email">Email</label>
           <input id="email" type="email" placeholder="Enter your SJSU email" />
           <div id="emailError" class="error-message"></div>
         </div>
 
         <div class="form-group">
-          <label>Password</label>
+          <label for="password">Password</label>
           <input id="password" type="password" />
           <div id="passwordError" class="error-message"></div>
         </div>
 
         <div class="form-group">
-          <label>Confirm Password</label>
+          <label for="confirmPassword">Confirm Password</label>
           <input id="confirmPassword" type="password" />
           <div id="confirmPasswordError" class="error-message"></div>
         </div>
@@ -165,13 +166,114 @@
     const passwordInput = document.getElementById("password")
     const confirmPasswordInput = document.getElementById("confirmPassword")
 
+    const emailError = document.getElementById("emailError")
+    const passwordError = document.getElementById("passwordError")
+    const confirmPasswordError = document.getElementById("confirmPasswordError")
+    const signupServerMessage = document.getElementById("signupServerMessage")
+
+    function showError(element, message) {
+      element.textContent = message
+      element.style.display = "block"
+    }
+
+    function clearError(element) {
+      element.textContent = ""
+      element.style.display = "none"
+    }
+
+    function clearAllErrors() {
+      clearError(emailError)
+      clearError(passwordError)
+      clearError(confirmPasswordError)
+      clearError(signupServerMessage)
+    }
+
+    function validateEmail() {
+      const email = emailInput.value.trim().toLowerCase()
+
+      if (!email) {
+        showError(emailError, "Email is required.")
+        return false
+      }
+
+      if (!email.endsWith("@sjsu.edu")) {
+        showError(emailError, "Email must end with @sjsu.edu")
+        return false
+      }
+
+      clearError(emailError)
+      return true
+    }
+
+    function validatePassword() {
+      const password = passwordInput.value
+
+      if (!password) {
+        showError(passwordError, "Password is required.")
+        return false
+      }
+
+      if (password.length < 6) {
+        showError(passwordError, "Password must be at least 6 characters long")
+        return false
+      }
+
+      clearError(passwordError)
+      return true
+    }
+
+    function validateConfirmPassword() {
+      const password = passwordInput.value
+      const confirmPassword = confirmPasswordInput.value
+
+      if (!confirmPassword) {
+        showError(confirmPasswordError, "Please confirm your password.")
+        return false
+      }
+
+      if (password !== confirmPassword) {
+        showError(confirmPasswordError, "The two passwords do not match")
+        return false
+      }
+
+      clearError(confirmPasswordError)
+      return true
+    }
+
+    emailInput.addEventListener("input", function () {
+      validateEmail()
+    })
+
+    passwordInput.addEventListener("input", function () {
+      validatePassword()
+
+      if (confirmPasswordInput.value) {
+        validateConfirmPassword()
+      }
+    })
+
+    confirmPasswordInput.addEventListener("input", function () {
+      validateConfirmPassword()
+    })
+
     signupForm.addEventListener("submit", async function (e) {
       e.preventDefault()
+      clearAllErrors()
+
+      const emailValid = validateEmail()
+      const passwordValid = validatePassword()
+      const confirmPasswordValid = validateConfirmPassword()
+
+      if (!emailValid || !passwordValid || !confirmPasswordValid) {
+        return
+      }
 
       try {
         const response = await fetch("/api/signup", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             email: emailInput.value.trim(),
             password: passwordInput.value,
@@ -179,17 +281,26 @@
           })
         })
 
+        const result = await response.json()
+
         if (!response.ok) {
-          document.getElementById("signupServerMessage").textContent = "Sign up failed"
+          if (result.field === "email") {
+            showError(emailError, result.message)
+          } else if (result.field === "password") {
+            showError(passwordError, result.message)
+          } else if (result.field === "confirmPassword") {
+            showError(confirmPasswordError, result.message)
+          } else {
+            showError(signupServerMessage, result.message || "Sign up failed.")
+          }
           return
         }
 
         window.location.href = "signUpSuccess.html"
-      } catch {
-        document.getElementById("signupServerMessage").textContent = "Server error"
+      } catch (error) {
+        showError(signupServerMessage, "Server error.")
       }
     })
   </script>
-
 </body>
 </html>

@@ -63,7 +63,7 @@ function isValidSjsuEmail(email) {
 }
 
 function isValidPassword(password) {
-  return typeof password === "string" && password.length > 6
+  return typeof password === "string" && password.length >= 6
 }
 
 function createVerificationToken() {
@@ -281,6 +281,14 @@ app.post("/api/signup", async function (req, res) {
     const password = req.body.password || ""
     const confirmPassword = req.body.confirmPassword || ""
 
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        field: "email",
+        message: "Email is required."
+      })
+    }
+
     if (!isValidSjsuEmail(email)) {
       return res.status(400).json({
         success: false,
@@ -289,11 +297,27 @@ app.post("/api/signup", async function (req, res) {
       })
     }
 
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        field: "password",
+        message: "Password is required."
+      })
+    }
+
     if (!isValidPassword(password)) {
       return res.status(400).json({
         success: false,
         field: "password",
-        message: "Password must be longer than 6 characters"
+        message: "Password must be at least 6 characters long"
+      })
+    }
+
+    if (!confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        field: "confirmPassword",
+        message: "Please confirm your password."
       })
     }
 
@@ -357,6 +381,14 @@ app.post("/api/signup", async function (req, res) {
   } catch (error) {
     console.error("Sign up error:", error)
 
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        field: "email",
+        message: "This email is already registered"
+      })
+    }
+
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred during sign up"
@@ -381,7 +413,7 @@ app.post("/api/signin", async function (req, res) {
       return res.status(400).json({
         success: false,
         field: "password",
-        message: "Password must be longer than 6 characters"
+        message: "Password must be at least 6 characters long"
       })
     }
 
