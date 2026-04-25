@@ -1,3 +1,4 @@
+````markdown id="fixed-readme"
 <h1>
   <img src="./images/iClasslogo.jpg" width="50" style="vertical-align: middle;">
   iClass
@@ -5,7 +6,7 @@
 
 ## 📌 Overview
 
-**iClass** is a web-based classroom search and reservation system for the Engineering Building at San José State University. It allows users to view classroom availability, browse schedules, create accounts, and reserve rooms.
+**iClass** is a web-based classroom search and reservation system for the Engineering Building at San José State University. It allows users to view classroom availability, browse schedules, create accounts, reserve rooms, and submit complaints.
 
 ## 📝 Description
 
@@ -15,7 +16,9 @@ This is where we come in. We at iClass have sourced publicly available data on c
 
 There is an additional layer of security in that only those with an official .sjsu domain email address may reserve rooms, so faculty can view who has booked rooms at certain times if needed.
 
-**Disclaimer:** The publicly sourced information does not include every classroom or every time slot. If a room is occupied, it is up to the user's discretion to leave, especially if an official SJSU activity is taking place. Abuse of this system may result in bans and potential reporting to SJSU.
+iClass also includes a complaints tab that allows users to report issues such as occupied rooms, scheduling conflicts, or misuse of the reservation system.
+
+**Disclaimer:** The publicly sourced information does not include every classroom or every time slot. If a room is occupied, it is up to the user's discretion to leave, especially if an official SJSU activity is taking place. Abuse of this system may result in bans, complaints being filed, and potential reporting to SJSU.
 
 ---
 
@@ -31,6 +34,7 @@ There is an additional layer of security in that only those with an official .sj
 - Edit user info (name & SJSU ID)  
 - Cancel or mark reservations as attended  
 - View reservation history  
+- Submit complaints through the complaints tab  
 
 ---
 
@@ -82,10 +86,10 @@ git clone https://github.com/shretodorito27/iClass.git
 ```
 
 ### Option 2: Download ZIP
--	Open the GitHub repository
--	Click Code
--	Click Download ZIP
--	Extract the ZIP folder
+- Open the GitHub repository
+- Click Code
+- Click Download ZIP
+- Extract the ZIP folder
 
 ---
 
@@ -150,7 +154,6 @@ If you are testing email confirmation from outside your local machine using Clou
 ### Step 3:
 <img src="./images/EnvironmentStep3.jpg" width="700">
 
-
 ---
 
 ## ▶️ How to Run the Project
@@ -188,12 +191,16 @@ Create an account using an SJSU email and verify via email.
 Log in using your verified account.
 
 ### Reserve a Room
-Fill out reservation form and confirm via email.
+Fill out reservation form and confirm via email.  
+Users may reserve up to a maximum of 6 total hours per day.
 
 ### My Profile
 - View current reservations  
 - Cancel or mark as attended  
 - View reservation history  
+
+### Complaints Tab
+Report issues such as occupied rooms, scheduling conflicts, or misuse of the system.
 
 ---
 
@@ -203,6 +210,8 @@ Fill out reservation form and confirm via email.
 - No past date/time reservations  
 - Start time must be before end time  
 - Must confirm reservation via email  
+- Users may reserve up to 6 total hours per day  
+- Additional reservations exceeding this limit will be rejected  
 
 ---
 
@@ -217,3 +226,5 @@ https://github.com/shretodorito27/iClass
 iClass Development Team
 
 ---
+````
+
