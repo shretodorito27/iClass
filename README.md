@@ -98,6 +98,12 @@ git clone https://github.com/shretodorito27/iClass.git
 
 ---
 
+## 🛠️ Compilation
+
+This project does not require a separate compilation step, as it is executed directly using Node.js.
+
+---
+
 ## 📦 How to Install Dependencies
 Open a terminal in the project root folder and run:
 ```bash
