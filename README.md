@@ -222,7 +222,9 @@ https://github.com/shretodorito27/iClass
 
 ## 👥 Authors
 
-iClass Development Team
+iClass Development Team  
+
+### Acknowledgments
+This project utilized assistance from AI tools, including ChatGPT and GitHub Copilot, for code suggestions, debugging, and documentation support.
 
 ---
-
